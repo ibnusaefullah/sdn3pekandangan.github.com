@@ -1,0 +1,2782 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UPTD SDN 3 PEKANDANGAN - Website Resmi</title>
+    <link rel="icon" type="image/png" href="https://sdn3pekandangan.my.canva.site/ukuran-asli-tanpa-judul/images/d3591436db7dc9fd68140219717adb8a.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .modal {
+            transition: opacity 0.25s ease;
+        }
+        .modal-content {
+            transition: transform 0.25s ease;
+        }
+        #admin-panel,
+        #anggota-panel {
+            display: none;
+        }
+        .prose {
+            max-width: 100%;
+        }
+        .hero-text-shadow {
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+        }
+        .admin-tab, .anggota-tab {
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+        .admin-tab.active-tab, .anggota-tab.active-tab {
+            border-color: #3B82F6;
+            color: #2563EB;
+            font-weight: 600;
+        }
+        #notification-container {
+            position: fixed;
+            top: 1.25rem;
+            right: 1.25rem;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        .notification {
+            transform: translateX(120%);
+            animation: slideIn 0.5s forwards;
+        }
+        @keyframes slideIn {
+            to {
+                transform: translateX(0);
+            }
+        }
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(120%);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+    <div id="notification-container"></div>
+    <header id="header" class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                <img src="https://sdn3pekandangan.my.canva.site/ukuran-asli-tanpa-judul/images/d3591436db7dc9fd68140219717adb8a.png" alt="Logo Sekolah" class="h-12 w-12" onerror="this.onerror=null;this.src='https://placehold.co/50x50/cccccc/ffffff?text=Err';">
+                <div>
+                    <a href="#" class="text-lg font-bold text-gray-800 leading-tight">UPTD SDN 3 PEKANDANGAN</a>
+                    <p class="text-xs text-gray-600 leading-tight">KABUPATEN INDRAMAYU</p>
+                </div>
+            </div>
+            <div class="hidden md:flex space-x-6 items-center">
+                <a href="#beranda" class="text-gray-600 hover:text-blue-600">Beranda</a>
+                <a href="#profil" class="text-gray-600 hover:text-blue-600">Profil</a>
+                <a href="#spmb" class="text-yellow-600 font-bold hover:text-yellow-800">SPMB</a>
+                <a href="#berita" class="text-gray-600 hover:text-blue-600">Berita</a>
+                <a href="#fasilitas" class="text-gray-600 hover:text-blue-600">Fasilitas</a>
+                <a href="#guru" class="text-gray-600 hover:text-blue-600">Struktur</a>
+                <a href="#prestasi" class="text-gray-600 hover:text-blue-600">Prestasi</a>
+                <a href="#galeri" class="text-gray-600 hover:text-blue-600">Galeri</a>
+                <a href="#kontak" class="text-gray-600 hover:text-blue-600">Kontak</a>
+                <div id="admin-nav-link" class="hidden">
+                    <a href="#admin-panel" class="font-bold text-red-600 hover:text-red-800 relative">
+                        Panel Kontrol
+                        <span id="admin-notif-badge" class="hidden absolute -top-2 -right-3 h-5 w-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center"></span>
+                    </a>
+                </div>
+                <div id="anggota-nav-link" class="hidden">
+                    <a href="#anggota-panel" class="font-bold text-green-600 hover:text-green-800">Panel Anggota</a>
+                </div>
+                <div id="user-status">
+                    <button id="login-button" class="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 shadow-md flex items-center space-x-2">
+                        <i class="fas fa-sign-in-alt"></i>
+                        <span>Login</span>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden">
+                <button id="mobile-menu-button" class="text-gray-800 focus:outline-none"><i class="fas fa-bars fa-lg"></i></button>
+            </div>
+        </nav>
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
+            <a href="#beranda" class="block py-3 px-6 text-sm hover:bg-blue-50">Beranda</a>
+            <a href="#profil" class="block py-3 px-6 text-sm hover:bg-blue-50">Profil</a>
+            <a href="#spmb" class="block py-3 px-6 text-sm font-bold text-yellow-600 hover:bg-yellow-50">SPMB</a>
+            <a href="#berita" class="block py-3 px-6 text-sm hover:bg-blue-50">Berita</a>
+            <a href="#fasilitas" class="block py-3 px-6 text-sm hover:bg-blue-50">Fasilitas</a>
+            <a href="#ekstrakurikuler" class="block py-3 px-6 text-sm hover:bg-blue-50">Ekstrakurikuler</a>
+            <a href="#guru" class="block py-3 px-6 text-sm hover:bg-blue-50">Struktur</a>
+            <a href="#prestasi" class="block py-3 px-6 text-sm hover:bg-blue-50">Prestasi</a>
+            <a href="#galeri" class="block py-3 px-6 text-sm hover:bg-blue-50">Galeri</a>
+            <a href="#kontak" class="block py-3 px-6 text-sm hover:bg-blue-50">Kontak</a>
+            <div id="mobile-admin-nav-link" class="hidden p-2 border-t">
+                <a href="#admin-panel" class="block text-center font-bold text-red-600 bg-red-100 py-2 rounded-md">Panel Kontrol</a>
+            </div>
+            <div id="mobile-anggota-nav-link" class="hidden p-2 border-t">
+                <a href="#anggota-panel" class="block text-center font-bold text-green-600 bg-green-100 py-2 rounded-md">Panel Anggota</a>
+            </div>
+            <div id="mobile-user-status" class="p-4 border-t">
+                <button id="mobile-login-button" class="w-full bg-blue-600 text-white px-4 py-2 rounded-full shadow-md">Login</button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section id="beranda" class="relative h-[60vh] md:h-[80vh] text-white overflow-hidden">
+            <div id="slider-container" class="absolute inset-0 w-full h-full">
+            </div>
+            <div class="absolute inset-0 bg-black/50 z-10"></div>
+            <div class="relative z-20 h-full flex flex-col items-center justify-center text-center p-4">
+                <h1 class="text-4xl md:text-6xl font-extrabold mb-2 leading-tight hero-text-shadow">Selamat Datang di UPTD SDN 3 PEKANDANGAN</h1>
+                <p class="text-xl md:text-3xl font-semibold hero-text-shadow">KABUPATEN INDRAMAYU</p>
+                <p class="text-lg md:text-2xl font-light mt-4 hero-text-shadow">Mencetak Generasi Unggul, Cerdas, dan Berkarakter</p>
+            </div>
+            <div id="slider-dots" class="absolute z-20 bottom-5 left-1/2 -translate-x-1/2 flex space-x-3">
+            </div>
+        </section>
+
+        <section id="profil" class="py-20 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center">
+                    <h2 class="text-4xl font-bold mb-4">Profil Sekolah</h2>
+                    <p class="text-gray-600 max-w-3xl mx-auto mb-12">Mengenal lebih dekat UPTD SDN 3 PEKANDANGAN, tempat kami membangun masa depan bangsa.</p>
+                </div>
+                <div class="bg-gray-50 rounded-2xl shadow-lg p-8 md:p-12 mb-16 flex flex-col md:flex-row items-center gap-8 md:gap-12">
+                    <img id="kepsek-foto" src="" alt="Foto Kepala Sekolah" class="w-40 h-40 rounded-full object-cover flex-shrink-0 shadow-lg border-4 border-white">
+                    <div class="text-center md:text-left">
+                        <h3 class="text-2xl font-bold text-blue-800 mb-2">Sambutan Kepala Sekolah</h3>
+                        <p id="kepsek-sambutan" class="text-gray-600 italic mb-4"></p>
+                        <p id="kepsek-nama" class="font-bold text-gray-800 mt-4"></p>
+                        <p id="kepsek-jabatan" class="text-sm text-gray-500"></p>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8 text-left">
+                    <div class="bg-blue-50 p-8 rounded-xl shadow-md border-l-4 border-blue-500">
+                        <h3 class="text-2xl font-bold mb-3 text-blue-700">Visi</h3>
+                        <p id="visi-content" class="text-gray-700"></p>
+                    </div>
+                    <div class="bg-green-50 p-8 rounded-xl shadow-md border-l-4 border-green-500">
+                        <h3 class="text-2xl font-bold mb-3 text-green-700">Misi</h3>
+                        <ul id="misi-content" class="list-disc list-inside space-y-2 text-gray-700"></ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="spmb" class="py-20 bg-gray-50">
+            <div class="container mx-auto px-6">
+                <div class="text-center">
+                    <h2 class="text-4xl font-bold mb-4">Sistem Penerimaan Murid Baru (SPMB) 2025/2026</h2>
+                    <p class="text-gray-600 max-w-3xl mx-auto mb-12">Informasi pendaftaran UPTD SDN 3 Pekandangan Tahun Ajaran 2025/2026.</p>
+                </div>
+
+                <div id="spmb-content" class="max-w-7xl mx-auto grid lg:grid-cols-5 gap-12 mb-16">
+                </div>
+
+                <div class="text-center mb-12">
+                    <h3 class="text-3xl font-bold">Formulir Pendaftaran Online</h3>
+                    <p class="text-gray-600 max-w-3xl mx-auto mt-2">Daftarkan putra-putri Anda dengan mengisi formulir di bawah ini.</p>
+                </div>
+                <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden md:grid md:grid-cols-2">
+                    <div class="bg-blue-600 text-white p-8 md:p-12 flex flex-col justify-center">
+                        <h3 class="text-2xl font-bold mb-4">Langkah Mudah Mendaftar</h3>
+                        <p class="mb-6 opacity-90">Hanya perlu beberapa menit untuk mendaftar. Pastikan data yang Anda masukkan sudah benar.</p>
+                        <ul class="space-y-4">
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle mt-1 mr-3 text-xl"></i>
+                                <span>Isi formulir dengan data yang valid dan lengkap di samping.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-clock mt-1 mr-3 text-xl"></i>
+                                <span>Tunggu konfirmasi dari pihak sekolah melalui nomor yang Anda daftarkan.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-school mt-1 mr-3 text-xl"></i>
+                                <span>Lakukan proses daftar ulang di sekolah sesuai jadwal yang ditentukan.</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="p-8 md:p-12">
+                        <div id="spmb-message" class="mb-4"></div>
+                        <form id="spmb-form" name="spmb-form" method="post" action="https://script.google.com/macros/s/AKfycbxqNEGti2a0QJ0Fd_cPjAvqxjjn-qQXtkouMb_5WCnWEaX1Zlqa-BgIJ2haAYlaSrA4fg/exec" target="hidden-iframe">
+                            <div class="space-y-5">
+                                <div>
+                                    <label for="nama" class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap Peserta Didik</label>
+                                    <input type="text" id="nama" name="nama" placeholder="Contoh: Ananda Putri" required class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                                </div>
+                                <div>
+                                    <label for="Tempat_Lahir" class="block text-sm font-medium text-gray-700 mb-1">Tempat Lahir</label>
+                                    <input type="text" id="Tempat_Lahir" name="Tempat_Lahir" placeholder="Contoh: Indramayu" required class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                                </div>
+                                <div>
+                                    <label for="tgl_lahir" class="block text-sm font-medium text-gray-700 mb-1">Tanggal Lahir</label>
+                                    <input type="date" id="tgl_lahir" name="tgl_lahir" required class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                                </div>
+                                <div>
+                                    <label for="alamat" class="block text-sm font-medium text-gray-700 mb-1">Alamat Lengkap</label>
+                                    <input type="text" id="alamat" name="alamat" placeholder="Jl. Pahlawan No. 123" required class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                                </div>
+                                <div>
+                                    <label for="no_hp" class="block text-sm font-medium text-gray-700 mb-1">Nomor HP Orang Tua (Aktif)</label>
+                                    <input type="tel" id="no_hp" name="no_hp" placeholder="Contoh: 081234567890" pattern="[0-9]{10,13}" required class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                                </div>
+                                <button type="submit" id="spmb-submit-button" class="w-full mt-2 flex items-center justify-center bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors shadow-lg disabled:bg-blue-400">
+                                    <span class="btn-text">Kirim Data Pendaftaran</span>
+                                    <i class="fas fa-spinner fa-spin ml-2 hidden"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="berita" class="py-20 bg-white">
+            <div class="container mx-auto px-6">
+                <h2 class="text-4xl font-bold text-center mb-12">Berita Terbaru</h2>
+                <div id="news-container" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                </div>
+            </div>
+        </section>
+
+        <section id="fasilitas" class="py-20 bg-gray-50">
+            <div class="container mx-auto px-6">
+                <h2 class="text-4xl font-bold text-center mb-12">Fasilitas Sekolah</h2>
+                <div id="fasilitas-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                </div>
+            </div>
+        </section>
+
+        <section id="guru" class="py-20 bg-white">
+            <div class="container mx-auto px-6">
+                <h2 class="text-4xl font-bold text-center mb-4">Struktur Organisasi Sekolah</h2>
+                <p class="text-center text-gray-600 mb-16">Tenaga Pendidik dan Kependidikan UPTD SDN 3 Pekandangan</p>
+                <div id="struktur-container" class="flex flex-col items-center">
+                </div>
+            </div>
+        </section>
+
+        <section id="prestasi" class="py-20 bg-gray-50">
+            <div class="container mx-auto px-6">
+                <h2 class="text-4xl font-bold text-center mb-12">Prestasi Siswa</h2>
+                <div id="prestasi-container" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                </div>
+            </div>
+        </section>
+
+        <section id="galeri" class="py-20 bg-white">
+            <div class="container mx-auto px-6">
+                <h2 class="text-4xl font-bold text-center mb-12">Galeri Kegiatan</h2>
+                <div id="galeri-container" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                </div>
+            </div>
+        </section>
+
+        <section id="kontak" class="py-20 bg-gray-50">
+            <div class="container mx-auto px-6">
+                <h2 class="text-4xl font-bold text-center mb-12">Hubungi Kami</h2>
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <h3 class="text-2xl font-bold mb-6">Informasi Kontak</h3>
+                        <div class="space-y-4">
+                            <p id="kontak-alamat" class="flex items-center"><i class="fas fa-map-marker-alt w-6 text-center mr-3 text-blue-600"></i></p>
+                            <p id="kontak-telepon" class="flex items-center"><i class="fas fa-phone w-6 text-center mr-3 text-blue-600"></i></p>
+                            <p id="kontak-email" class="flex items-center"><i class="fas fa-envelope w-6 text-center mr-3 text-blue-600"></i></p>
+                        </div>
+                        <div class="mt-8 pt-6 border-t">
+                            <h4 class="font-bold mb-2 text-lg">Jam Operasional Kantor</h4>
+                            <p id="kontak-jam" class="text-gray-600"></p>
+                        </div>
+                    </div>
+                    <div class="rounded-xl shadow-lg overflow-hidden h-96">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3965.2382530425807!2d108.32591649999999!3d-6.3632036!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e6eb98bc60f7457%3A0xbd8b026b572c4ecc!2sSdn%20Pekandangan%203!5e0!3m2!1sen!2sid!4v1750579615164!5m2!1sen!2sid" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="admin-panel" class="py-20 bg-gray-200">
+            <div class="container mx-auto px-6">
+                <h2 class="text-4xl font-bold text-center mb-12">Panel Kontrol Admin</h2>
+                <div class="mb-8 border-b border-gray-300">
+                    <nav id="admin-tabs" class="flex flex-wrap" aria-label="Tabs">
+                            <button onclick="showAdminTab('siswa')" class="admin-tab active-tab text-sm sm:text-base">Data Siswa</button>
+                            <button onclick="showAdminTab('berita')" class="admin-tab text-sm sm:text-base">Berita</button>
+                            <button onclick="showAdminTab('profil')" class="admin-tab text-sm sm:text-base">Profil Sekolah</button>
+                            <button onclick="showAdminTab('spmb')" class="admin-tab text-sm sm:text-base">SPMB</button>
+                            <button onclick="showAdminTab('fasilitas')" class="admin-tab text-sm sm:text-base">Fasilitas</button>
+                            <button onclick="showAdminTab('struktur')" class="admin-tab text-sm sm:text-base">Struktur Organisasi</button>
+                            <button onclick="showAdminTab('prestasi')" class="admin-tab text-sm sm:text-base">Prestasi</button>
+                            <button onclick="showAdminTab('galeri')" class="admin-tab text-sm sm:text-base">Galeri</button>
+                            <button onclick="showAdminTab('kontak')" class="admin-tab text-sm sm:text-base">Hubungi Kami</button>
+                            <button onclick="showAdminTab('pengguna')" class="admin-tab text-sm sm:text-base">Manaj. Pengguna</button>
+                            <button onclick="showAdminTab('lulusan')" class="admin-tab text-sm sm:text-base">Data Lulusan</button>
+                            <button onclick="showAdminTab('aktivitas')" class="admin-tab text-sm sm:text-base relative">
+                                Aktivitas Anggota
+                                <span id="activity-tab-badge" class="hidden absolute -top-1 right-0 h-3 w-3 bg-red-500 rounded-full"></span>
+                            </button>
+                    </nav>
+                </div>
+
+                <div id="admin-tab-berita" class="admin-tab-content hidden">
+                    <div class="bg-white p-8 rounded-xl shadow-lg mb-12">
+                        <h3 id="form-title" class="text-2xl font-bold mb-6">Tambah/Edit Berita</h3>
+                        <form id="post-form">
+                            <input type="hidden" id="post-id">
+                            <div class="mb-4"><label for="post-title" class="block font-medium mb-1">Judul Berita</label><input type="text" id="post-title" class="w-full p-2 border rounded-md" required></div>
+                            <div class="mb-4"><label for="post-content" class="block font-medium mb-1">Konten Singkat</label><textarea id="post-content" rows="3" class="w-full p-2 border rounded-md" required></textarea></div>
+                            <div class="mb-4"><label for="post-full-content" class="block font-medium mb-1">Konten Lengkap</label><textarea id="post-full-content" rows="5" class="w-full p-2 border rounded-md" required></textarea></div>
+                            <div class="mb-6"><label for="post-image" class="block font-medium mb-1">URL Gambar</label><input type="text" id="post-image" class="w-full p-2 border rounded-md" placeholder="Contoh: https://placehold.co/600x400" required></div>
+                            <div class="flex space-x-4"><button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">Simpan Berita</button><button type="button" id="cancel-edit-btn" class="bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600 hidden">Batal Edit</button></div>
+                        </form>
+                    </div>
+                    <div class="bg-white p-8 rounded-xl shadow-lg">
+                        <h3 class="text-2xl font-bold mb-6">Daftar Berita</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left">
+                                <thead>
+                                    <tr class="bg-gray-100">
+                                        <th class="p-3">Judul</th>
+                                        <th class="p-3">Konten</th>
+                                        <th class="p-3">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="posts-table-body">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="admin-tab-profil" class="admin-tab-content hidden">
+                    <form id="profil-form" class="bg-white p-8 rounded-xl shadow-lg">
+                        <h3 class="text-2xl font-bold mb-6">Edit Profil Sekolah</h3>
+                        <div class="space-y-6">
+                            <div>
+                                <h4 class="text-xl font-semibold mb-3 border-b pb-2">Sambutan Kepala Sekolah</h4>
+                                <div class="space-y-4">
+                                    <div><label for="edit-kepsek-nama" class="block font-medium mb-1">Nama Kepala Sekolah</label><input type="text" id="edit-kepsek-nama" class="w-full p-2 border rounded-md"></div>
+                                    <div><label for="edit-kepsek-jabatan" class="block font-medium mb-1">Jabatan</label><input type="text" id="edit-kepsek-jabatan" class="w-full p-2 border rounded-md"></div>
+                                    <div><label for="edit-kepsek-foto" class="block font-medium mb-1">URL Foto</label><input type="text" id="edit-kepsek-foto" class="w-full p-2 border rounded-md"></div>
+                                    <div><label for="edit-kepsek-sambutan" class="block font-medium mb-1">Isi Sambutan</label><textarea id="edit-kepsek-sambutan" rows="5" class="w-full p-2 border rounded-md"></textarea></div>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="text-xl font-semibold mb-3 border-b pb-2">Visi & Misi</h4>
+                                <div class="space-y-4">
+                                    <div><label for="edit-visi" class="block font-medium mb-1">Visi</label><textarea id="edit-visi" rows="3" class="w-full p-2 border rounded-md"></textarea></div>
+                                    <div><label for="edit-misi" class="block font-medium mb-1">Misi (Satu poin per baris)</label><textarea id="edit-misi" rows="5" class="w-full p-2 border rounded-md"></textarea></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-8"><button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">Simpan Perubahan Profil</button></div>
+                    </form>
+                </div>
+
+                <div id="admin-tab-spmb" class="admin-tab-content hidden">
+                    <form id="spmb-edit-form" class="bg-white p-8 rounded-xl shadow-lg">
+                        <h3 class="text-2xl font-bold mb-6">Edit Informasi SPMB</h3>
+                        <div class="space-y-6">
+                            <div>
+                                <h4 class="text-xl font-semibold mb-3 border-b pb-2">Alur Waktu Pendaftaran (5 Tahap)</h4>
+                                <div id="spmb-timeline-editor" class="space-y-4">
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="text-xl font-semibold mb-3 border-b pb-2">Syarat Pendaftaran</h4>
+                                <div><label for="edit-spmb-syarat-umum" class="block font-medium mb-1">Syarat Umum (Satu per baris)</label><textarea id="edit-spmb-syarat-umum" rows="4" class="w-full p-2 border rounded-md"></textarea></div>
+                                <div><label for="edit-spmb-berkas" class="block font-medium mb-1 mt-4">Berkas Administrasi (Satu per baris)</label><textarea id="edit-spmb-berkas" rows="5" class="w-full p-2 border rounded-md"></textarea></div>
+                            </div>
+                        </div>
+                        <div class="mt-8"><button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">Simpan Informasi SPMB</button></div>
+                    </form>
+                </div>
+
+                <div id="admin-tab-fasilitas" class="admin-tab-content hidden">
+                    <div class="bg-white p-8 rounded-xl shadow-lg mb-12">
+                        <h3 id="fasilitas-form-title" class="text-2xl font-bold mb-6">Tambah/Edit Fasilitas</h3>
+                        <form id="fasilitas-form">
+                            <input type="hidden" id="fasilitas-id">
+                            <div class="grid md:grid-cols-3 gap-4">
+                                <div><label for="fasilitas-nama" class="block font-medium mb-1">Nama Fasilitas</label><input type="text" id="fasilitas-nama" class="w-full p-2 border rounded-md" required></div>
+                                <div><label for="fasilitas-icon" class="block font-medium mb-1">Ikon (Font Awesome)</label><input type="text" id="fasilitas-icon" placeholder="e.g., fas fa-book-open" class="w-full p-2 border rounded-md" required></div>
+                                <div><label for="fasilitas-status" class="block font-medium mb-1">Status</label><input type="text" id="fasilitas-status" placeholder="e.g., Segera Hadir (opsional)" class="w-full p-2 border rounded-md"></div>
+                            </div>
+                            <div class="mt-4"><label for="fasilitas-deskripsi" class="block font-medium mb-1">Deskripsi Singkat</label><textarea id="fasilitas-deskripsi" rows="3" class="w-full p-2 border rounded-md" required></textarea></div>
+                            <div class="mt-6 flex space-x-4"><button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">Simpan Fasilitas</button><button type="button" id="cancel-edit-fasilitas-btn" class="bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600 hidden">Batal Edit</button></div>
+                        </form>
+                    </div>
+                    <div class="bg-white p-8 rounded-xl shadow-lg">
+                        <h3 class="text-2xl font-bold mb-6">Daftar Fasilitas</h3>
+                        <div id="fasilitas-table-container" class="overflow-x-auto">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="admin-tab-struktur" class="admin-tab-content hidden">
+                    <div class="bg-white p-8 rounded-xl shadow-lg">
+                        <h3 class="text-2xl font-bold mb-6">Edit Struktur Organisasi</h3>
+                        <p class="text-gray-600 mb-6">Data untuk struktur organisasi diambil dari daftar pengguna. Gunakan tab <a href="#" onclick="showAdminTab('pengguna'); return false;" class="text-blue-600 font-semibold underline">Manajemen Pengguna</a> untuk menambah, mengubah, atau menghapus staf dan guru. Perubahan akan otomatis ditampilkan di halaman utama.</p>
+                        <div class="overflow-x-auto">
+                           <table class="w-full text-left">
+                               <thead>
+                                   <tr class="bg-gray-100">
+                                       <th class="p-3">Foto</th>
+                                       <th class="p-3">Nama</th>
+                                       <th class="p-3">Jabatan</th>
+                                       <th class="p-3">Status</th>
+                                   </tr>
+                               </thead>
+                               <tbody id="struktur-preview-table">
+                               </tbody>
+                           </table>
+                        </div>
+                       </div>
+                </div>
+
+                <div id="admin-tab-prestasi" class="admin-tab-content hidden">
+                    <div class="bg-white p-8 rounded-xl shadow-lg mb-12">
+                        <h3 id="prestasi-form-title" class="text-2xl font-bold mb-6">Tambah/Edit Prestasi</h3>
+                        <form id="prestasi-form">
+                            <input type="hidden" id="prestasi-id">
+                            <div class="mb-4"><label for="prestasi-judul" class="block font-medium mb-1">Nama Lomba/Prestasi</label><input type="text" id="prestasi-judul" class="w-full p-2 border rounded-md" required></div>
+                            <div class="mb-4"><label for="prestasi-deskripsi" class="block font-medium mb-1">Deskripsi (Nama Siswa, Juara, Tingkat, Tahun)</label><textarea id="prestasi-deskripsi" rows="3" class="w-full p-2 border rounded-md" required></textarea></div>
+                            <div class="mb-6"><label for="prestasi-gambar" class="block font-medium mb-1">URL Gambar</label><input type="text" id="prestasi-gambar" class="w-full p-2 border rounded-md" placeholder="Contoh: https://placehold.co/600x400" required></div>
+                            <div class="flex space-x-4"><button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">Simpan Prestasi</button><button type="button" id="cancel-edit-prestasi-btn" class="bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600 hidden">Batal Edit</button></div>
+                        </form>
+                    </div>
+                    <div class="bg-white p-8 rounded-xl shadow-lg">
+                        <h3 class="text-2xl font-bold mb-6">Daftar Prestasi</h3>
+                        <div id="prestasi-table-container" class="overflow-x-auto">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="admin-tab-galeri" class="admin-tab-content hidden">
+                    <div class="bg-white p-8 rounded-xl shadow-lg mb-12">
+                        <h3 id="galeri-form-title" class="text-2xl font-bold mb-6">Tambah/Edit Gambar Galeri</h3>
+                        <form id="galeri-form">
+                            <input type="hidden" id="galeri-id">
+                            <div class="mb-4"><label for="galeri-src" class="block font-medium mb-1">URL Gambar</label><input type="url" id="galeri-src" class="w-full p-2 border rounded-md" placeholder="https://..." required></div>
+                            <div class="mb-6"><label for="galeri-alt" class="block font-medium mb-1">Deskripsi Gambar (Alt Text)</label><input type="text" id="galeri-alt" class="w-full p-2 border rounded-md" placeholder="e.g., Kegiatan Upacara Bendera" required></div>
+                            <div class="flex space-x-4"><button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">Simpan Gambar</button><button type="button" id="cancel-edit-galeri-btn" class="bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600 hidden">Batal Edit</button></div>
+                        </form>
+                    </div>
+                    <div class="bg-white p-8 rounded-xl shadow-lg">
+                        <h3 class="text-2xl font-bold mb-6">Daftar Gambar di Galeri</h3>
+                        <div id="galeri-table-container" class="overflow-x-auto">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="admin-tab-kontak" class="admin-tab-content hidden">
+                    <form id="kontak-form" class="bg-white p-8 rounded-xl shadow-lg">
+                        <h3 class="text-2xl font-bold mb-6">Edit Informasi Kontak</h3>
+                        <div class="space-y-4">
+                            <div><label for="edit-kontak-alamat" class="block font-medium mb-1">Alamat</label><input type="text" id="edit-kontak-alamat" class="w-full p-2 border rounded-md"></div>
+                            <div><label for="edit-kontak-telepon" class="block font-medium mb-1">Telepon</label><input type="text" id="edit-kontak-telepon" class="w-full p-2 border rounded-md"></div>
+                            <div><label for="edit-kontak-email" class="block font-medium mb-1">Email</label><input type="email" id="edit-kontak-email" class="w-full p-2 border rounded-md"></div>
+                            <div><label for="edit-kontak-jam" class="block font-medium mb-1">Jam Operasional</label><input type="text" id="edit-kontak-jam" class="w-full p-2 border rounded-md"></div>
+                        </div>
+                        <div class="mt-8"><button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">Simpan Perubahan Kontak</button></div>
+                    </form>
+                </div>
+
+                <div id="admin-tab-pengguna" class="admin-tab-content hidden">
+                        <div class="bg-white p-8 rounded-xl shadow-lg mb-8">
+                            <div class="flex flex-wrap justify-between items-center mb-6 gap-4">
+                                <h3 class="text-2xl font-bold">Manajemen Data Pengguna</h3>
+                                <div class="flex flex-wrap gap-2">
+                                    <input type="file" id="user-csv-import-input" class="hidden" accept=".csv">
+                                    <button type="button" onclick="document.getElementById('user-csv-import-input').click()" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 flex items-center gap-2 text-sm">
+                                        <i class="fas fa-file-import"></i> Impor Pengguna
+                                    </button>
+                                    <button type="button" onclick="exportUsersToCSV()" class="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 flex items-center gap-2 text-sm">
+                                        <i class="fas fa-file-export"></i> Ekspor Pengguna
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    <div class="bg-white p-8 rounded-xl shadow-lg mb-8">
+                        <h3 class="text-2xl font-bold mb-6">Tambah Pengguna Baru</h3>
+                        <form id="add-user-form">
+                            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                <div><label for="new-user-name" class="block font-medium mb-1">Nama Lengkap</label><input type="text" id="new-user-name" class="w-full p-2 border rounded-md" required></div>
+                                <div><label for="new-username" class="block font-medium mb-1">Username</label><input type="text" id="new-username" class="w-full p-2 border rounded-md" required></div>
+                                <div><label for="new-password" class="block font-medium mb-1">Password Awal</label><input type="text" id="new-password" class="w-full p-2 border rounded-md" required></div>
+                                <div><label for="new-user-jabatan" class="block font-medium mb-1">Jabatan</label><input type="text" id="new-user-jabatan" class="w-full p-2 border rounded-md"></div>
+                                <div><label for="new-user-foto" class="block font-medium mb-1">URL Foto</label><input type="text" id="new-user-foto" class="w-full p-2 border rounded-md" placeholder="https://placehold.co/200x200"></div>
+                                <div>
+                                    <label for="new-user-role" class="block font-medium mb-1">Status Pengguna</label>
+                                    <select id="new-user-role" class="w-full p-2 border rounded-md" required>
+                                        <option value="anggota">Anggota</option>
+                                        <option value="admin">Admin</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="mt-6"><button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">Tambah Pengguna</button></div>
+                        </form>
+                    </div>
+
+                    <div class="bg-white p-8 rounded-xl shadow-lg">
+                        <h3 class="text-2xl font-bold mb-6">Daftar Pengguna</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left">
+                                <thead>
+                                    <tr class="bg-gray-100">
+                                        <th class="p-3">Nama</th>
+                                        <th class="p-3">Username</th>
+                                        <th class="p-3">Jabatan</th>
+                                        <th class="p-3">Password</th>
+                                        <th class="p-3">Status</th>
+                                        <th class="p-3">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="users-table-body">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div id="admin-reset-requests-section" class="bg-white p-8 rounded-xl shadow-lg mt-8">
+                        <h3 class="text-2xl font-bold mb-6">Permintaan Reset Password Anggota</h3>
+                        <div id="reset-requests-container" class="space-y-4">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="admin-tab-siswa" class="admin-tab-content">
+                    <div class="bg-white p-8 rounded-xl shadow-lg">
+                            <div class="flex flex-wrap justify-between items-center mb-6 gap-4">
+                                <h3 class="text-2xl font-bold">Daftar Peserta Didik</h3>
+                                <div class="flex flex-wrap gap-2">
+                                    <button onclick="confirmProsesKenaikanKelas()" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 flex items-center gap-2 text-sm">
+                                        <i class="fas fa-graduation-cap"></i> Proses Kenaikan Kelas
+                                    </button>
+                                    <input type="file" id="csv-import-input" class="hidden" accept=".csv">
+                                    <button type="button" onclick="document.getElementById('csv-import-input').click()" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 flex items-center gap-2 text-sm">
+                                        <i class="fas fa-file-import"></i> Impor CSV
+                                    </button>
+                                    <button type="button" onclick="exportSiswaToCSV()" class="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 flex items-center gap-2 text-sm">
+                                        <i class="fas fa-file-export"></i> Ekspor CSV
+                                    </button>
+                                    <button type="button" onclick="openSiswaModal()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center gap-2 text-sm">
+                                        <i class="fas fa-plus"></i> Tambah Siswa
+                                    </button>
+                                       <button type="button" onclick="confirmDeleteAllSiswa()" class="bg-red-700 text-white px-4 py-2 rounded-lg hover:bg-red-800 flex items-center gap-2 text-sm">
+                                        <i class="fas fa-trash-alt"></i> Hapus Semua
+                                    </button>
+                                </div>
+                            </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left">
+                                <thead>
+                                    <tr class="bg-gray-100">
+                                        <th class="p-3">No</th>
+                                        <th class="p-3">Nama Peserta Didik</th>
+                                        <th class="p-3">Kelas</th>
+                                        <th class="p-3">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="siswa-table-body">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="admin-tab-lulusan" class="admin-tab-content hidden">
+                        <div class="bg-white p-8 rounded-xl shadow-lg">
+                        <h3 class="text-2xl font-bold mb-6">Daftar Lulusan</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left">
+                                <thead>
+                                    <tr class="bg-gray-100">
+                                        <th class="p-3">No</th>
+                                        <th class="p-3">Nama Lulusan</th>
+                                        <th class="p-3">Tahun Lulus</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="lulusan-table-body">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="admin-tab-aktivitas" class="admin-tab-content hidden">
+                    <div class="bg-white p-8 rounded-xl shadow-lg">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-2xl font-bold">Log Aktivitas Anggota</h3>
+                            <button id="mark-all-activity-read" class="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-600">
+                                Tandai Semua Telah Dibaca
+                            </button>
+                        </div>
+                        <div id="activity-log-container" class="space-y-3 max-h-[60vh] overflow-y-auto pr-2">
+                            
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section id="anggota-panel" class="py-20 bg-gray-100">
+            <div class="container mx-auto px-6">
+                <h2 class="text-4xl font-bold text-center mb-12">Panel Kontrol Anggota</h2>
+                <div class="mb-8 border-b border-gray-300">
+                    <nav id="anggota-tabs" class="flex flex-wrap" aria-label="Tabs">
+                        <button onclick="showAnggotaTab('berita')" class="anggota-tab text-sm sm:text-base">Berita Saya</button>
+                        <button onclick="showAnggotaTab('siswa')" class="anggota-tab active-tab text-sm sm:text-base">Peserta Didik</button>
+                        <button onclick="showAnggotaTab('pengaturan')" class="anggota-tab text-sm sm:text-base">Pengaturan Akun</button>
+                    </nav>
+                </div>
+
+                <div id="anggota-tab-berita" class="anggota-tab-content hidden">
+                    <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12">
+                        <div class="bg-white p-8 rounded-xl shadow-lg">
+                            <h3 id="anggota-form-title" class="text-2xl font-bold mb-6">Tambah/Edit Berita</h3>
+                            <form id="anggota-post-form">
+                                <input type="hidden" id="anggota-post-id">
+                                <div class="mb-4"><label for="anggota-post-title" class="block font-medium mb-1">Judul Berita</label><input type="text" id="anggota-post-title" class="w-full p-2 border rounded-md" required></div>
+                                <div class="mb-4"><label for="anggota-post-content" class="block font-medium mb-1">Konten Singkat</label><textarea id="anggota-post-content" rows="3" class="w-full p-2 border rounded-md" required></textarea></div>
+                                <div class="mb-4"><label for="anggota-post-full-content" class="block font-medium mb-1">Konten Lengkap</label><textarea id="anggota-post-full-content" rows="5" class="w-full p-2 border rounded-md" required></textarea></div>
+                                <div class="mb-6"><label for="anggota-post-image" class="block font-medium mb-1">URL Gambar</label><input type="text" id="anggota-post-image" class="w-full p-2 border rounded-md" placeholder="Contoh: https://placehold.co/600x400" required></div>
+                                <div class="flex space-x-4"><button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">Simpan Berita</button><button type="button" id="anggota-cancel-edit-btn" class="bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600 hidden">Batal Edit</button></div>
+                            </form>
+                        </div>
+                        <div class="bg-white p-8 rounded-xl shadow-lg">
+                            <h3 class="text-2xl font-bold mb-6">Daftar Berita Anda</h3>
+                            <div id="anggota-posts-table-container" class="overflow-x-auto"></div>
+                        </div>
+                    </div>
+                </div>
+
+                   <div id="anggota-tab-siswa" class="anggota-tab-content">
+                    <div class="bg-white p-8 rounded-xl shadow-lg">
+                        <div class="flex justify-between items-center mb-6">
+                           <h3 class="text-2xl font-bold">Daftar Peserta Didik</h3>
+                           <button id="anggota-tambah-siswa-btn" onclick="openSiswaModal()" class="hidden bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center gap-2">
+                               <i class="fas fa-plus"></i> Tambah Siswa
+                           </button>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left">
+                                <thead>
+                                    <tr class="bg-gray-100">
+                                        <th class="p-3">No</th>
+                                        <th class="p-3">Nama Peserta Didik</th>
+                                        <th class="p-3">Kelas</th>
+                                        <th id="anggota-siswa-aksi-header" class="p-3">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="anggota-siswa-table-body">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="anggota-tab-pengaturan" class="anggota-tab-content hidden">
+                    <div class="max-w-xl mx-auto bg-white p-8 rounded-xl shadow-lg">
+                           <h3 class="font-bold text-2xl mb-6 text-center">Pengaturan Akun</h3>
+                           <p class="text-center text-gray-600 mb-6">Anda dapat mengubah nama, username, atau password Anda di sini.</p>
+                           <div class="max-w-sm mx-auto">
+                               <button id="edit-my-profile-btn" class="w-full bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 text-lg font-semibold">Edit Profil & Password</button>
+                           </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white py-10">
+        <div class="container mx-auto px-6 text-center">
+            <p>© <span id="year"></span> UPTD SDN 3 PEKANDANGAN. Hak Cipta Dilindungi.</p>
+            <div class="mt-4 flex justify-center space-x-6">
+                <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-facebook-f fa-lg"></i></a>
+                <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-instagram fa-lg"></i></a>
+                <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-youtube fa-lg"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <div id="news-gallery-modal" class="modal fixed inset-0 bg-black/70 flex items-center justify-center p-4 opacity-0 pointer-events-none z-50">
+        <div id="news-gallery-modal-content" class="modal-content bg-white rounded-lg shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-auto transform scale-95"></div>
+    </div>
+
+    <div id="login-modal" class="modal fixed inset-0 bg-black/70 flex items-center justify-center p-4 opacity-0 pointer-events-none z-50">
+        <div id="login-modal-content" class="modal-content bg-white rounded-lg shadow-2xl w-full max-w-sm transform scale-95">
+            <div class="p-8">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-2xl font-bold">Login Pengguna</h3>
+                    <button id="close-login-modal" class="text-gray-500 hover:text-gray-800 text-3xl font-bold">×</button>
+                </div>
+                <div id="login-message" class="mb-4 text-sm"></div>
+                <form id="login-form">
+                    <div class="mb-4"><label for="username" class="block text-sm font-medium">Username</label><input type="text" id="username" class="mt-1 block w-full p-2 border rounded-md" required></div>
+                    <div class="mb-4"><label for="password" class="block text-sm font-medium">Password</label><input type="password" id="password" class="mt-1 block w-full p-2 border rounded-md" required></div>
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium">Login sebagai</label>
+                        <div class="flex items-center space-x-4 mt-2">
+                            <label class="flex items-center"><input type="radio" name="role" value="admin" class="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"><span class="ml-2">Admin</span></label>
+                            <label class="flex items-center"><input type="radio" name="role" value="anggota" class="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500" checked><span class="ml-2">Anggota</span></label>
+                        </div>
+                    </div>
+                    <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700">Login</button>
+                    <button type="button" id="forgot-password-btn" class="text-sm text-blue-600 hover:underline mt-4">Lupa Password?</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="edit-user-modal" class="modal fixed inset-0 bg-black/70 flex items-center justify-center p-4 opacity-0 pointer-events-none z-[60]">
+        <div id="edit-user-modal-content" class="modal-content bg-white rounded-lg shadow-2xl w-full max-w-lg transform scale-95">
+            <div class="p-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-2xl font-bold">Edit Pengguna</h3>
+                    <button id="close-edit-user-modal" class="text-gray-500 hover:text-gray-800 text-3xl font-bold">×</button>
+                </div>
+                <form id="edit-user-form">
+                    <input type="hidden" id="edit-original-username">
+                    <div class="space-y-4">
+                        <div>
+                            <label for="edit-user-name" class="block text-sm font-medium mb-1">Nama Lengkap</label>
+                            <input type="text" id="edit-user-name" class="w-full p-2 border rounded-md" required>
+                        </div>
+                        <div>
+                            <label for="edit-username" class="block text-sm font-medium mb-1">Username</label>
+                            <input type="text" id="edit-username" class="w-full p-2 border rounded-md" required>
+                        </div>
+                        <div>
+                            <label for="edit-user-password" class="block text-sm font-medium mb-1">Password Baru (opsional)</label>
+                            <input type="text" id="edit-user-password" placeholder="Kosongkan jika tidak ingin ganti" class="w-full p-2 border rounded-md">
+                        </div>
+                        <div>
+                           <label for="edit-user-jabatan" class="block text-sm font-medium mb-1">Jabatan</label>
+                           <input type="text" id="edit-user-jabatan" class="w-full p-2 border rounded-md">
+                        </div>
+                        <div>
+                           <label for="edit-user-foto" class="block text-sm font-medium mb-1">URL Foto</label>
+                           <input type="text" id="edit-user-foto" class="w-full p-2 border rounded-md">
+                        </div>
+                    </div>
+                    <div class="mt-6 flex justify-end">
+                        <button type="button" id="cancel-edit-user-btn" class="bg-gray-200 text-gray-800 px-6 py-2 rounded-lg hover:bg-gray-300 mr-4">Batal</button>
+                        <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">Simpan Perubahan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="edit-siswa-modal" class="modal fixed inset-0 bg-black/70 flex items-center justify-center p-4 opacity-0 pointer-events-none z-[60]">
+        <div id="edit-siswa-modal-content" class="modal-content bg-white rounded-lg shadow-2xl w-full max-w-lg transform scale-95">
+            <div class="p-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 id="siswa-form-title" class="text-2xl font-bold">Tambah/Edit Peserta Didik</h3>
+                    <button id="close-edit-siswa-modal" class="text-gray-500 hover:text-gray-800 text-3xl font-bold">×</button>
+                </div>
+                <form id="siswa-form">
+                    <input type="hidden" id="siswa-id">
+                    <div class="space-y-4">
+                        <div>
+                            <label for="siswa-name" class="block font-medium mb-1">Nama Peserta Didik</label>
+                            <input type="text" id="siswa-name" class="w-full p-2 border rounded-md" required>
+                        </div>
+                        <div>
+                            <label for="siswa-kelas" class="block font-medium mb-1">Kelas</label>
+                            <input type="number" id="siswa-kelas" class="w-full p-2 border rounded-md" required min="1" max="6">
+                        </div>
+                    </div>
+                    <div class="mt-6 flex justify-end">
+                        <button type="button" id="cancel-edit-siswa-btn" class="bg-gray-200 text-gray-800 px-6 py-2 rounded-lg hover:bg-gray-300 mr-4">Batal</button>
+                        <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">Simpan Siswa</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="forgot-password-modal" class="modal fixed inset-0 bg-black/70 flex items-center justify-center p-4 opacity-0 pointer-events-none z-50">
+        <div id="forgot-password-modal-content" class="modal-content bg-white rounded-lg shadow-2xl w-full max-w-sm transform scale-95">
+            <div class="p-8">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-2xl font-bold">Lupa Password</h3>
+                    <button id="close-forgot-modal" class="text-gray-500 hover:text-gray-800 text-3xl font-bold">×</button>
+                </div>
+                <div id="forgot-message" class="mb-4 text-sm"></div>
+                <p class="text-gray-600 text-sm mb-4">Masukkan username akun anggota Anda untuk meminta reset password. Permintaan akan dikirim ke Admin.</p>
+                <form id="forgot-password-form">
+                    <div class="mb-4"><label for="forgot-username" class="block text-sm font-medium">Username Anggota</label><input type="text" id="forgot-username" class="mt-1 block w-full p-2 border rounded-md" required></div>
+                    <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700">Kirim Permintaan</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="confirm-modal" class="modal fixed inset-0 bg-black/70 flex items-center justify-center p-4 opacity-0 pointer-events-none z-[70]">
+        <div id="confirm-modal-content" class="modal-content bg-white rounded-lg shadow-2xl w-full max-w-sm transform scale-95 p-6 text-center">
+            <h3 class="text-lg font-bold mb-4" id="confirm-title">Konfirmasi Tindakan</h3>
+            <p id="confirm-message" class="text-gray-600 mb-6">Apakah Anda yakin ingin melanjutkan?</p>
+            <div class="flex justify-center space-x-4">
+                <button id="confirm-no-btn" class="px-6 py-2 rounded-lg bg-gray-200 hover:bg-gray-300">Batal</button>
+                <button id="confirm-yes-btn" class="px-6 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700">Ya, Lanjutkan</button>
+            </div>
+        </div>
+    </div>
+
+    <iframe name="hidden-iframe" id="hidden-iframe" style="display:none;" onload="handleIframeLoad()"></iframe>
+
+    <script>
+        let websiteContent = {
+            users: [
+                { name: "Citra Yacob, S.Pd.", username: "citrayacob", password: "1234", role: "admin", jabatan: "Kepala Sekolah", foto_url: "https://placehold.co/200x200/3498db/ffffff?text=Citra+Y.", rombel: null },
+                { name: "Ibnu Saefullah, S.Pd.", username: "ibnusaefullah", password: "1234", role: "admin", jabatan: "Operator Sekolah", foto_url: "https://placehold.co/200x200/8e44ad/ffffff?text=Ibnu+S.", rombel: null },
+                { name: "Sunenti, S.Ag.", username: "sunenti", password: "1234", role: "anggota", jabatan: "Guru Agama Islam", foto_url: "https://placehold.co/200x200/34495e/ffffff?text=Sunenti", rombel: null },
+                { name: "Muhammad Bisri, S.Pd.", username: "muhammadbisri", password: "1234", role: "anggota", jabatan: "Guru Kelas 5", foto_url: "https://placehold.co/200x200/2ecc71/ffffff?text=M.+Bisri", rombel: 5 },
+                { name: "Iin Jumiatiin, S.Pd.", username: "iinjumiatin", password: "1234", role: "anggota", jabatan: "Guru Kelas 5", foto_url: "https://placehold.co/200x200/27ae60/ffffff?text=Iin+J.", rombel: 5 },
+                { name: "Merika Wulandari, S.Pd.", username: "merikawulandari", password: "1234", role: "anggota", jabatan: "Guru Kelas 6", foto_url: "https://placehold.co/200x200/e74c3c/ffffff?text=Merika+W.", rombel: 6 },
+                { name: "Muhayatul Awwaliyah, S.Pd.", username: "muhayatulawwaliyah", password: "1234", role: "anggota", jabatan: "Guru Kelas 3", foto_url: "https://placehold.co/200x200/9b59b6/ffffff?text=Muhayatul", rombel: 3 },
+                { name: "Sri Winci, S.Pd.", username: "sriwinci", password: "1234", role: "anggota", jabatan: "Guru Kelas 2", foto_url: "https://placehold.co/200x200/e74c3c/ffffff?text=Sri+W.", rombel: 2 },
+                { name: "Nurcahyani", username: "nurcahyani", password: "1234", role: "anggota", jabatan: "Guru Kelas 1", foto_url: "https://placehold.co/200x200/f1c40f/ffffff?text=Nurcahyani", rombel: 1 },
+                { name: "Iqbal Fahlefi, S.Pd.", username: "iqbalfahlefi", password: "1234", role: "anggota", jabatan: "Guru Olahraga", foto_url: "https://placehold.co/200x200/1abc9c/ffffff?text=Iqbal+F.", rombel: null },
+                { name: "Tirsan", username: "tirsan", password: "1234", role: "anggota", jabatan: "Penjaga Sekolah", foto_url: "https://placehold.co/200x200/7f8c8d/ffffff?text=Tirsan", rombel: null }
+            ],
+            pesertaDidik: [
+                { id: 1, nama: "ARJUN MAULANA", kelas: 1 }, { id: 2, nama: "AUDY NATASHA HUMAIRAH", kelas: 1 }, { id: 3, nama: "CINDY AULIA", kelas: 1 }, { id: 4, nama: "FAHMI SAWALUDIN", kelas: 1 }, { id: 5, nama: "KANSA NURKHOLIPAH", kelas: 1 }, { id: 6, nama: "KAYSAN DZAKY", kelas: 1 }, { id: 7, nama: "KEYSA AMELIA PUTRI", kelas: 1 }, { id: 8, nama: "LIDIYANA", kelas: 1 }, { id: 9, nama: "MAURA AQILA FAHREYNA", kelas: 1 }, { id: 10, nama: "MIKA SEPTIYANA GITSUN", kelas: 1 }, { id: 11, nama: "MOCHAMMAD ALDRIC FAHREYZA", kelas: 1 }, { id: 12, nama: "MUHAMAD TENGKU ALFA REZA", kelas: 1 }, { id: 13, nama: "REVAND ZILGWEND", kelas: 1 }, { id: 14, nama: "RIFA NAZIHAH SYIFA", kelas: 1 }, { id: 15, nama: "SALSABIILAH HEASSLER CORA", kelas: 1 }, { id: 16, nama: "SALSABILA MARSELA", kelas: 1 }, { id: 17, nama: "SELVI RAMADHANI", kelas: 1 }, { id: 18, nama: "SHAQELLA KANAYA GHAIDA", kelas: 1 }, { id: 19, nama: "SYAFIRA ARHANI", kelas: 1 }, { id: 20, nama: "Abbad Nailun Nabhan", kelas: 2 }, { id: 21, nama: "Adam Alberd Adrian", kelas: 2 }, { id: 22, nama: "AKHMAD MINNAKHUL KHUSNI", kelas: 2 }, { id: 23, nama: "ALICE SEFYA PRAMUDITA", kelas: 2 }, { id: 24, nama: "ALIKA NATTAYA SHOIPET", kelas: 2 }, { id: 25, nama: "ALISHA KHAIRA RAMADHINA", kelas: 2 }, { id: 26, nama: "ANGGUN ANGGRAENI", kelas: 2 }, { id: 27, nama: "ANTONY TRISTAN AL-JARAS", kelas: 2 }, { id: 28, nama: "AQIVA NAYLA AL-AMIRA", kelas: 2 }, { id: 29, nama: "FITRI AYU DEWI", kelas: 2 }, { id: 30, nama: "GILANG ADITYA", kelas: 2 }, { id: 31, nama: "HANIF TAUFIK BADJRI", kelas: 2 }, { id: 32, nama: "ISTIQOMAH", kelas: 2 }, { id: 33, nama: "KAKA JULIANSYAH", kelas: 2 }, { id: 34, nama: "KHALID AZAM MAULIMI", kelas: 2 }, { id: 35, nama: "KHANZA RISKI RAMADHANI", kelas: 2 }, { id: 36, nama: "KHARUNISA", kelas: 2 }, { id: 37, nama: "MAFAZA NUR MARZIA", kelas: 2 }, { id: 38, nama: "MUHAMAD DAMAR SYARIFUDIN", kelas: 2 }, { id: 39, nama: "MUHAMAD RAFFASYAH", kelas: 2 }, { id: 40, nama: "MUHAMMAD FADLLAN KOSASI", kelas: 2 }, { id: 41, nama: "MUTIARA AGUSTINA WATI", kelas: 2 }, { id: 42, nama: "PANDE PUTU KENZIE MAHATMA", kelas: 2 }, { id: 43, nama: "RESTU ABIH ASAH", kelas: 2 }, { id: 44, nama: "RISANSYAH AHMAD MAULID", kelas: 2 }, { id: 45, nama: "SATRIA RAFLI RAMADHAN", kelas: 2 }, { id: 46, nama: "SOFIYAH", kelas: 2 }, { id: 47, nama: "SYAFANI FAKHRUNNISA", kelas: 2 }, { id: 48, nama: "SYAFWA RAHMA", kelas: 2 }, { id: 49, nama: "SYAQILA KURNIA MALIK", kelas: 2 }, { id: 50, nama: "SYIFANI KHAERUNNISA", kelas: 2 }, { id: 51, nama: "WIRANTO", kelas: 2 }, { id: 52, nama: "ABDURAHMAN JAMALUDIN FARIDZ", kelas: 3 }, { id: 53, nama: "AISAH ROSA", kelas: 3 }, { id: 54, nama: "ALIYA RATNA SARI", kelas: 3 }, { id: 55, nama: "ARDIANSYAH PRATAMA", kelas: 3 }, { id: 56, nama: "ASYFA PUTRI NOVIANTI", kelas: 3 }, { id: 57, nama: "DEANDRA REY FLINKI", kelas: 3 }, { id: 58, nama: "DEEVA ZEVANA PUTRI", kelas: 3 }, { id: 59, nama: "DEWI GAYATRI", kelas: 3 }, { id: 60, nama: "GILANG PRANATA SUKMA", kelas: 3 }, { id: 61, nama: "ICA ROHAIDAH", kelas: 3 }, { id: 62, nama: "JIDAN KHOIRUL ADHA", kelas: 3 }, { id: 63, nama: "KEANU HERLINO ABBASY", kelas: 3 }, { id: 64, nama: "KHOFSOH", kelas: 3 }, { id: 65, nama: "MUHAMAD FAHAT FIRDAUS", kelas: 3 }, { id: 66, nama: "MUHAMMAD ADE IKHYA ULUMUDIN", kelas: 3 }, { id: 67, nama: "MUHAMMAD HAFIDZ NUR RAFII", kelas: 3 }, { id: 68, nama: "NOVI ASHARA MULYANINGRUM", kelas: 3 }, { id: 69, nama: "PANCA FATHUNABA", kelas: 3 }, { id: 70, nama: "RANGGA KHAIRUL WISAM", kelas: 3 }, { id: 71, nama: "REEMA APRILLIANI", kelas: 3 }, { id: 72, nama: "REVALINA PUTRI DIANI", kelas: 3 }, { id: 73, nama: "RIKI WIJAYA", kelas: 3 }, { id: 74, nama: "SARAH", kelas: 3 }, { id: 75, nama: "WINDA KOMALASARI", kelas: 3 }, { id: 76, nama: "YUNITA APRILYA AGUSTINE", kelas: 3 }, { id: 77, nama: "YASMIN AZZIKRA", kelas: 3 }, { id: 78, nama: "ABU BAKAR HASAN BAROYA", kelas: 3 }, { id: 79, nama: "ALIF DARIS HERNANDEZ", kelas: 4 }, { id: 80, nama: "ASSYIFAH INDAH KHAIRUNNISYA", kelas: 4 }, { id: 81, nama: "DAFFA NAUFAL AFKAR", kelas: 4 }, { id: 82, nama: "DEWI PARWATI MUTMA'INAH", kelas: 4 }, { id: 83, nama: "FAJRIL ILHAM AMRULLAH", kelas: 4 }, { id: 84, nama: "FARRA SYAKIRA RAMADHANI", kelas: 4 }, { id: 85, nama: "KIAN SENTANU AJI", kelas: 4 }, { id: 86, nama: "MUHAMMAD PRABU", kelas: 4 }, { id: 87, nama: "NIRWANA BILQIS", kelas: 4 }, { id: 88, nama: "PUTRI NABILLA OKTAVIYANI", kelas: 4 }, { id: 89, nama: "RAFA AZKA PUTRA", kelas: 4 }, { id: 90, nama: "S. NUR ENDANG PUTRI BARUNA", kelas: 4 }, { id: 91, nama: "SALSA OKTAVIANI", kelas: 4 }, { id: 92, nama: "SERIN SHELIYA AGIWA", kelas: 4 }, { id: 93, nama: "WIRA WERDINATA", kelas: 4 }, { id: 94, nama: "ZIHAN PADILA ANGGARA SUKMA", kelas: 4 }, { id: 95, nama: "SERLY MELIYANA PUSPA", kelas: 4 }, { id: 96, nama: "AHMAD BAHHANI", kelas: 5 }, { id: 97, nama: "AISYAH", kelas: 5 }, { id: 98, nama: "ALWY MUHAMMAD ASYQ", kelas: 5 }, { id: 99, nama: "BAGAS ALVIANO", kelas: 5 }, { id: 100, nama: "DELLISA OKTOFIA NURAZZAMI", kelas: 5 }, { id: 101, nama: "ELISBETH GOTZE MULLER", kelas: 5 }, { id: 102, nama: "EVAN DIMAS PERMANA", kelas: 5 }, { id: 103, nama: "FARHAN ADE MAULANA", kelas: 5 }, { id: 104, nama: "JORDI ALBA", kelas: 5 }, { id: 105, nama: "LINTANG NURZAHRA", kelas: 5 }, { id: 106, nama: "MINHATUN MAULIA", kelas: 5 }, { id: 107, nama: "MOHAMAD ADWA JAVIER", kelas: 5 }, { id: 108, nama: "MUHAMAD FAQIH", kelas: 5 }, { id: 109, nama: "MUHAMMAD BIYAN KOSASI", kelas: 5 }, { id: 110, nama: "MUHAMMAD HANIF ALWI ZAIN", kelas: 5 }, { id: 111, nama: "MUHAMMAD SULTAN JAGARA", kelas: 5 }, { id: 112, nama: "NAZMA HAYATUNNISA", kelas: 5 }, { id: 113, nama: "PADIL MUHAMMAD SODDIQUEN", kelas: 5 }, { id: 114, nama: "REZKY ADHA AL-AMIN", kelas: 5 }, { id: 115, nama: "RIZKADILA MIRANTY", kelas: 5 }, { id: 116, nama: "SATRIYA WIGUNA", kelas: 5 }, { id: 117, nama: "WARSINIH SUSILAWATI", kelas: 5 }, { id: 118, nama: "Adam Nur'riski", kelas: 6 }, { id: 119, nama: "Aura Indah Zahra", kelas: 6 }, { id: 120, nama: "Ayu Ramadhani", kelas: 6 }, { id: 121, nama: "Eliza", kelas: 6 }, { id: 122, nama: "Fuji Anggun Silvi Indah", kelas: 6 }, { id: 123, nama: "Lizzie Adelia Putri", kelas: 6 }, { id: 124, nama: "Michila Aulia Mecca", kelas: 6 }, { id: 125, nama: "Mohamad Syafi'i Asyhari", kelas: 6 }, { id: 126, nama: "Muhyi Anwar Hafisudin", kelas: 6 }, { id: 127, nama: "Rahmat Hidayat", kelas: 6 }, { id: 128, nama: "Salamah Rahmah", kelas: 6 }, { id: 129, nama: "Sri Bunga Yoanika", kelas: 6 }, { id: 130, nama: "Umam Mizan Syamsuddin", kelas: 6 }
+            ],
+            lulusan: [],
+            passwordResets: [],
+            activityLog: [],
+            profil: {
+                kepsek: {
+                    nama: "Citra Yacob, S.Pd.",
+                    jabatan: "Kepala UPTD SDN 3 PEKANDANGAN",
+                    foto: "https://placehold.co/200x200/3498db/ffffff?text=Foto",
+                    sambutan: "Assalamualaikum Warahmatullahi Wabarakatuh. Puji syukur kehadirat Allah SWT yang telah melimpahkan rahmat-Nya kepada kita semua. Selamat datang di website resmi UPTD SDN 3 PEKANDANGAN. Melalui media ini, kami berharap dapat menjalin komunikasi yang lebih erat dengan seluruh warga sekolah dan masyarakat luas. Mari bersama-sama kita wujudkan generasi penerus yang cerdas dan berakhlak mulia."
+                },
+                visi: "Terwujudnya peserta didik yang beriman, bertaqwa, cerdas, terampil, mandiri, dan berwawasan global.",
+                misi: [
+                    "Menanamkan keimanan dan ketaqwaan melalui pengamalan ajaran agama.",
+                    "Mengoptimalkan proses pembelajaran dan bimbingan.",
+                    "Mengembangkan bidang ilmu pengetahuan dan teknologi.",
+                    "Membina kemandirian peserta didik melalui kegiatan kewirausahaan."
+                ]
+            },
+            spmb: {
+                timeline: [
+                    { title: "Periode Pendaftaran", date: "23 Juni – 28 Juni 2025", description: "Pelayanan pendaftaran dibuka setiap hari kerja selama periode tersebut, mulai pukul 08.00 hingga 14.00 WIB, bertempat di ruang sekretariat panitia UPTD SDN 3 Pekandangan." },
+                    { title: "Seleksi dan Verifikasi Berkas", date: "23 Juni – 5 Juli 2025", description: "Panitia melakukan verifikasi dan seleksi secara paralel seiring dengan masuknya berkas pendaftaran dan berlanjut hingga beberapa hari setelah pendaftaran ditutup untuk memastikan ketelitian." },
+                    { title: "Pengumuman Hasil Seleksi", date: "7 Juli 2025", description: "Hasil seleksi diumumkan secara terbuka dengan menempelkan daftar nama murid yang diterima di papan pengumuman resmi sekolah." },
+                    { title: "Periode Daftar Ulang", date: "8 Juli – 12 Juli 2025", description: "Calon murid yang dinyatakan lolos seleksi wajib melakukan daftar ulang untuk mengonfirmasi statusnya." },
+                    { title: "Hari Pertama Masuk Sekolah", date: "14 Juli 2025", description: "Awal dari Tahun Ajaran 2025/2026." }
+                ],
+                syaratUmum: [
+                    "Berusia 7 tahun per 1 Juli 2025.",
+                    "Paling rendah 6 tahun per 1 Juli 2025 (dengan rekomendasi psikolog jika ada).",
+                    "Tidak dipersyaratkan telah menyelesaikan TK/PAUD."
+                ],
+                berkas: [
+                    "Fotokopi Akta Kelahiran",
+                    "Fotokopi Kartu Keluarga (KK)",
+                    "Fotokopi KTP Orang Tua/Wali",
+                    "Pas Foto berwarna 3x4 (2 lembar)"
+                ]
+            },
+            fasilitas: [
+                { id: 1, icon: "fas fa-book-open", name: "Perpustakaan", description: "Koleksi buku lengkap untuk menunjang wawasan dan minat baca siswa.", status: "Segera Hadir" },
+                { id: 2, icon: "fas fa-computer", name: "Lab Komputer", description: "Dilengkapi perangkat modern untuk pengenalan teknologi sejak dini.", status: "Segera Hadir" },
+                { id: 3, icon: "fas fa-futbol", name: "Lapangan Olahraga", description: "Area luas untuk berbagai kegiatan olahraga dan upacara bendera.", status: "" },
+                { id: 4, icon: "fas fa-mosque", name: "Mushola", description: "Tempat ibadah yang nyaman untuk pembinaan rohani siswa.", status: "" },
+                { id: 5, icon: "fas fa-wifi", name: "Internet Gratis", description: "Akses Wi-Fi gratis di seluruh area sekolah untuk mendukung pembelajaran digital.", status: "" },
+                { id: 6, icon: "fas fa-leaf", name: "Lingkungan Asri", description: "Lingkungan sekolah yang bersih, hijau, dan nyaman untuk kegiatan belajar.", status: "" }
+            ],
+            prestasi: [
+                { id: 1, title: "Juara 1 Lomba Cerdas Cermat", description: "Diraih oleh Tim Cerdas Cermat Kelas 5 di Tingkat Kecamatan, 2024.", image: "https://placehold.co/600x400/f39c12/ffffff?text=Prestasi+1" },
+                { id: 2, title: "Juara 2 Lomba Menggambar", description: "Diraih oleh Ananda Putri (Kelas 4) di Tingkat Kabupaten, 2024.", image: "https://placehold.co/600x400/2ecc71/ffffff?text=Prestasi+2" }
+            ],
+            galeri: [
+                { id: 1, src: "https://placehold.co/500x800/e67e22/ffffff?text=Upacara", alt: "Kegiatan Upacara" },
+                { id: 2, src: "https://placehold.co/500x500/3498db/ffffff?text=Kelas", alt: "Suasana Kelas" },
+                { id: 3, src: "https://placehold.co/500x500/2ecc71/ffffff?text=Olahraga", alt: "Kegiatan Olahraga" },
+                { id: 4, src: "https://placehold.co/500x800/9b59b6/ffffff?text=Belajar", alt: "Kegiatan Belajar" },
+                { id: 5, src: "https://placehold.co/500x800/f1c40f/ffffff?text=Pramuka", alt: "Kegiatan Pramuka" },
+                { id: 6, src: "https://placehold.co/500x500/e74c3c/ffffff?text=Perpustakaan", alt: "Suasana Perpustakaan" },
+                { id: 7, src: "https://placehold.co/500x500/1abc9c/ffffff?text=Kesenian", alt: "Kegiatan Kesenian" },
+                { id: 8, src: "https://placehold.co/500x800/d35400/ffffff?text=Wisuda", alt: "Wisuda Siswa" }
+            ],
+            kontak: {
+                alamat: "Jl. Raya Pekandangan Km 4, Desa Pekandangan, Kec. Indramayu Kab. Indramayu",
+                telepon: "(0234) 123-456 (Contoh)",
+                email: "info@sdn3pekandangan.sch.id (Contoh)",
+                jam: "Senin - Jumat: 07:00 - 14:00 WIB"
+            }
+        };
+
+        let currentUser = {
+            username: null,
+            isAdmin: false
+        };
+
+        let posts = [{
+            id: 1,
+            title: 'Peringatan HUT RI ke-80',
+            content: 'Siswa-siswi dengan antusias mengikuti berbagai lomba.',
+            image: 'https://placehold.co/600x400/f39c12/ffffff?text=Kegiatan+17+Agustus',
+            fullContent: 'Seluruh warga sekolah, mulai dari siswa, guru, hingga staf, turut serta memeriahkan acara peringatan Hari Ulang Tahun Republik Indonesia yang ke-80. Berbagai macam lomba seperti balap karung, makan kerupuk, dan tarik tambang diadakan untuk menumbuhkan semangat kebersamaan dan nasionalisme.',
+            author: 'citrayacob'
+        }, {
+            id: 2,
+            title: 'Perkemahan Hari Pramuka',
+            content: 'Kegiatan Persami untuk melatih kemandirian siswa.',
+            image: 'https://placehold.co/600x400/2ecc71/ffffff?text=Hari+Pramuka',
+            fullContent: 'Dalam rangka memperingati Hari Pramuka, gugus depan SDN 3 Pekandangan mengadakan kegiatan Perkemahan Sabtu-Minggu (Persami). Acara diisi dengan kegiatan mendirikan tenda, api unggun, dan jelajah alam untuk melatih kedisiplinan, kemandirian, dan kerjasama antar anggota regu.',
+            author: 'ibnusaefullah'
+        }, {
+            id: 3,
+            title: 'Workshop Literasi Digital',
+            content: 'Siswa belajar menggunakan teknologi secara bijak.',
+            image: 'https://placehold.co/600x400/9b59b6/ffffff?text=Literasi+Digital',
+            fullContent: 'Bekerja sama dengan dinas pendidikan setempat, SDN 3 Pekandangan menggelar workshop tentang literasi digital. Siswa diajarkan cara mengidentifikasi berita hoaks, menjaga privasi di media sosial, dan memanfaatkan internet untuk pembelajaran secara positif dan aman.',
+            author: 'citrayacob'
+        }];
+
+        function logActivity(username, action) {
+            if (!username) return; // Jangan log jika tidak ada user
+            websiteContent.activityLog.unshift({
+                id: Date.now(),
+                timestamp: new Date().toISOString(),
+                username: username,
+                action: action,
+                read: false
+            });
+            updateAdminNotificationBadge();
+            renderActivityLog();
+        }
+
+        function renderAllContent() {
+            renderWebsiteContent();
+            renderStrukturOrganisasi();
+            renderPosts();
+            initHeroSlider();
+            renderPasswordResets();
+            updateAdminNotificationBadge();
+            renderUserManagementTable();
+            renderSiswaManagementTable();
+            renderAnggotaSiswaTable();
+            renderSPMB();
+            renderFasilitas();
+            renderPrestasi();
+            renderGaleri();
+            renderAdminForms();
+            renderActivityLog();
+        }
+
+        function renderAdminForms() {
+            renderSPMBAdminForm();
+            renderFasilitasAdminTable();
+            renderPrestasiAdminTable();
+            renderGaleriAdminTable();
+            renderStrukturAdminPreview();
+        }
+
+        function initializeEventListeners() {
+            document.getElementById('mobile-menu-button').addEventListener('click', () => document.getElementById('mobile-menu').classList.toggle('hidden'));
+            document.getElementById('mobile-menu').addEventListener('click', (e) => {
+                if (e.target.tagName === 'A') document.getElementById('mobile-menu').classList.add('hidden');
+            });
+            document.getElementById('year').textContent = new Date().getFullYear();
+            document.getElementById('profil-form').addEventListener('submit', handleProfilUpdate);
+            document.getElementById('kontak-form').addEventListener('submit', handleKontakUpdate);
+            document.getElementById('add-user-form').addEventListener('submit', addNewUser);
+            document.getElementById('post-form').addEventListener('submit', handlePostSubmit);
+            document.getElementById('cancel-edit-btn').addEventListener('click', resetPostForm);
+            document.getElementById('csv-import-input').addEventListener('change', handleImportSiswa);
+            document.getElementById('user-csv-import-input').addEventListener('change', handleImportUser);
+            document.getElementById('spmb-edit-form').addEventListener('submit', handleSpmbUpdate);
+            document.getElementById('fasilitas-form').addEventListener('submit', handleFasilitasSubmit);
+            document.getElementById('cancel-edit-fasilitas-btn').addEventListener('click', resetFasilitasForm);
+            document.getElementById('prestasi-form').addEventListener('submit', handlePrestasiSubmit);
+            document.getElementById('cancel-edit-prestasi-btn').addEventListener('click', resetPrestasiForm);
+            document.getElementById('galeri-form').addEventListener('submit', handleGaleriSubmit);
+            document.getElementById('cancel-edit-galeri-btn').addEventListener('click', resetGaleriForm);
+            document.getElementById('edit-my-profile-btn').addEventListener('click', showEditMyProfileModal);
+            document.getElementById('anggota-post-form').addEventListener('submit', handleAnggotaPostSubmit);
+            document.getElementById('anggota-cancel-edit-btn').addEventListener('click', resetAnggotaPostForm);
+            document.getElementById('mark-all-activity-read').addEventListener('click', markAllActivitiesAsRead);
+            setupModal('login-modal', 'login-modal-content', 'login-button', 'mobile-login-button', 'close-login-modal');
+            setupModal('forgot-password-modal', 'forgot-password-modal-content', 'forgot-password-btn', null, 'close-forgot-modal');
+            setupModal('edit-siswa-modal', 'edit-siswa-modal-content', null, null, 'close-edit-siswa-modal');
+            setupModal('edit-user-modal', 'edit-user-modal-content', null, null, 'close-edit-user-modal');
+            document.getElementById('cancel-edit-user-btn').addEventListener('click', () => closeModalById('edit-user-modal'));
+            document.getElementById('edit-user-form').addEventListener('submit', handleUpdateUser);
+            document.getElementById('login-form').addEventListener('submit', handleLogin);
+            document.getElementById('forgot-password-form').addEventListener('submit', handleForgotPasswordRequest);
+            document.getElementById('spmb-form').addEventListener('submit', e => {
+                if (!e.target.checkValidity()) return;
+                spmbFormSubmitted = true;
+                const spmbSubmitButton = document.getElementById('spmb-submit-button');
+                spmbSubmitButton.querySelector('.btn-text').textContent = 'Mengirim...';
+                spmbSubmitButton.querySelector('.fa-spinner').classList.remove('hidden');
+                spmbSubmitButton.disabled = true;
+                document.getElementById('spmb-message').innerHTML = '';
+            });
+            document.getElementById('siswa-form').addEventListener('submit', handleSiswaSubmit);
+            document.getElementById('cancel-edit-siswa-btn').addEventListener('click', () => closeModalById('edit-siswa-modal'));
+        }
+
+        function renderWebsiteContent() {
+            const profil = websiteContent.profil;
+            document.getElementById('kepsek-nama').textContent = profil.kepsek.nama;
+            document.getElementById('kepsek-jabatan').textContent = profil.kepsek.jabatan;
+            document.getElementById('kepsek-foto').src = profil.kepsek.foto;
+            document.getElementById('kepsek-sambutan').textContent = profil.kepsek.sambutan;
+            document.getElementById('visi-content').textContent = profil.visi;
+            const misiContainer = document.getElementById('misi-content');
+            misiContainer.innerHTML = '';
+            profil.misi.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = item;
+                misiContainer.appendChild(li);
+            });
+
+            const kontak = websiteContent.kontak;
+            document.getElementById('kontak-alamat').innerHTML = `<i class="fas fa-map-marker-alt w-6 text-center mr-3 text-blue-600"></i>${kontak.alamat}`;
+            document.getElementById('kontak-telepon').innerHTML = `<i class="fas fa-phone w-6 text-center mr-3 text-blue-600"></i>${kontak.telepon}`;
+            document.getElementById('kontak-email').innerHTML = `<i class="fas fa-envelope w-6 text-center mr-3 text-blue-600"></i>${kontak.email}`;
+            document.getElementById('kontak-jam').textContent = kontak.jam;
+        }
+
+        function renderSPMB() {
+            const spmbData = websiteContent.spmb;
+            const container = document.getElementById('spmb-content');
+            container.innerHTML = `
+                <div class="lg:col-span-2 bg-white p-8 rounded-2xl shadow-lg">
+                    <h3 class="text-2xl font-bold mb-6 text-center text-blue-800">Alur Waktu Pendaftaran</h3>
+                    <ul class="space-y-4">
+                        ${spmbData.timeline.map((item, index) => `
+                            <li class="flex items-start">
+                                <div class="flex-shrink-0 w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold text-lg">${index + 1}</div>
+                                <div class="ml-4">
+                                    <p class="font-bold">${item.title}</p>
+                                    <p class="text-sm text-gray-600">${item.date}</p>
+                                    <p class="text-xs text-gray-500 mt-1">${item.description}</p>
+                                </div>
+                            </li>
+                        `).join('')}
+                    </ul>
+                </div>
+                <div class="lg:col-span-3 bg-white p-8 rounded-2xl shadow-lg">
+                    <h3 class="text-2xl font-bold mb-6 text-center text-green-800">Syarat Pendaftaran</h3>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <h4 class="font-bold text-lg mb-2 text-gray-700">Syarat Umum</h4>
+                            <ul class="list-disc list-inside space-y-2 text-gray-600">
+                                ${spmbData.syaratUmum.map(item => `<li>${item}</li>`).join('')}
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-lg mb-2 text-gray-700">Berkas Administrasi</h4>
+                            <ul class="list-disc list-inside space-y-2 text-gray-600">
+                                ${spmbData.berkas.map(item => `<li>${item}</li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="mt-6 pt-4 border-t">
+                        <h4 class="font-bold text-lg mb-2 text-gray-700">Jalur Pendaftaran</h4>
+                        <p class="text-sm text-gray-500 mb-4">Sekolah memprioritaskan penerimaan melalui jalur berikut:</p>
+                        <div class="flex flex-wrap gap-4">
+                            <span class="bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full">Zonasi (min. 80%)</span>
+                            <span class="bg-green-100 text-green-800 text-sm font-medium px-3 py-1 rounded-full">Afirmasi (min. 15%)</span>
+                            <span class="bg-yellow-100 text-yellow-800 text-sm font-medium px-3 py-1 rounded-full">Pindah Tugas (maks. 5%)</span>
+                        </div>
+                    </div>
+                </div>`;
+        }
+
+        function renderFasilitas() {
+            const container = document.getElementById('fasilitas-container');
+            container.innerHTML = '';
+            websiteContent.fasilitas.forEach(f => {
+                const statusBadge = f.status ? `<span class="bg-yellow-200 text-yellow-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">${f.status}</span>` : '';
+                container.innerHTML += `
+                <div class="bg-white p-6 rounded-xl shadow-lg text-center transform hover:-translate-y-2 transition-transform duration-300">
+                    <div class="text-blue-600 mb-4"><i class="${f.icon} fa-3x"></i></div>
+                    <h3 class="font-bold text-xl mb-2 flex items-center justify-center gap-2">
+                        <span>${f.name}</span>
+                        ${statusBadge}
+                    </h3>
+                    <p class="text-gray-600 text-sm">${f.description}</p>
+                </div>`;
+            });
+        }
+
+        function renderStrukturOrganisasi() {
+            const container = document.getElementById('struktur-container');
+            if (!container) return;
+
+            const kepalaSekolah = websiteContent.users.find(u => u.jabatan && u.jabatan.toLowerCase().includes('kepala sekolah'));
+            const dewanGuru = websiteContent.users.filter(u => u.jabatan && u.jabatan.toLowerCase().includes('guru'));
+            const tendik = websiteContent.users.filter(u => u.jabatan && !u.jabatan.toLowerCase().includes('kepala sekolah') && !u.jabatan.toLowerCase().includes('guru'));
+
+            let kepalaSekolahHTML = '';
+            if (kepalaSekolah) {
+                kepalaSekolahHTML = `
+                <div class="text-center mb-8">
+                    <img src="${kepalaSekolah.foto_url || 'https://placehold.co/200x200/cccccc/ffffff?text=Foto'}" alt="Foto ${kepalaSekolah.name}" class="w-36 h-36 rounded-full mx-auto mb-4 shadow-lg object-cover ring-4 ring-blue-500">
+                    <h4 class="font-bold text-xl">${kepalaSekolah.name}</h4>
+                    <p class="text-blue-600 font-semibold">${kepalaSekolah.jabatan}</p>
+                </div>`;
+            }
+
+            const dewanGuruHTML = dewanGuru.map(guru => `
+                <div class="text-center relative pt-8">
+                    <div class="absolute top-0 left-1/2 -translate-x-1/2 h-8 border-l-2 border-dashed border-green-400"></div>
+                    <img src="${guru.foto_url || 'https://placehold.co/200x200/cccccc/ffffff?text=Foto'}" alt="Foto ${guru.name}" class="w-28 h-28 rounded-full mx-auto mb-4 shadow-md object-cover">
+                    <h4 class="font-bold text-lg">${guru.name}</h4>
+                    <p class="text-gray-600 text-sm">${guru.jabatan}</p>
+                </div>
+            `).join('');
+
+            const tendikHTML = tendik.map(staf => `
+                   <div class="text-center relative pt-8">
+                    <div class="absolute top-0 left-1/2 -translate-x-1/2 h-8 border-l-2 border-dashed border-indigo-400"></div>
+                    <img src="${staf.foto_url || 'https://placehold.co/200x200/cccccc/ffffff?text=Foto'}" alt="Foto ${staf.name}" class="w-28 h-28 rounded-full mx-auto mb-4 shadow-md object-cover">
+                    <h4 class="font-bold text-lg">${staf.name}</h4>
+                    <p class="text-gray-600 text-sm">${staf.jabatan}</p>
+                </div>
+            `).join('');
+
+            container.innerHTML = `
+                ${kepalaSekolahHTML}
+                <div class="h-16 border-l-2 border-dashed border-blue-400"></div>
+                <div class="relative w-full">
+                    <div class="absolute top-0 left-4 right-4 md:left-1/4 md:right-1/4 border-t-2 border-dashed border-blue-400"></div>
+                    <h3 class="text-3xl font-bold text-center mb-12 pt-8 text-gray-800">Dewan Guru</h3>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-y-12 gap-x-8 justify-items-center">
+                        ${dewanGuruHTML}
+                    </div>
+                </div>
+                <div class="w-0.5 h-16 bg-gray-300 mt-12"></div>
+                <div class="relative w-full">
+                    <div class="absolute top-0 left-1/4 right-1/4 border-t-2 border-dashed border-gray-300"></div>
+                    <h3 class="text-3xl font-bold text-center mb-12 pt-8 text-gray-800">Tenaga Kependidikan</h3>
+                    <div class="flex flex-wrap justify-center gap-x-16 gap-y-12">
+                        ${tendikHTML}
+                    </div>
+                </div>`;
+        }
+
+        function renderPrestasi() {
+            const container = document.getElementById('prestasi-container');
+            container.innerHTML = '';
+            if(websiteContent.prestasi.length === 0){
+                container.innerHTML = '<p class="text-center text-gray-600 col-span-full">Belum ada prestasi yang ditambahkan.</p>';
+                return;
+            }
+            websiteContent.prestasi.forEach(p => {
+                   container.innerHTML += `
+                   <div class="bg-white rounded-xl shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300">
+                           <img src="${p.image}" alt="${p.title}" class="w-full h-48 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/600x400/cccccc/ffffff?text=Image+Error';">
+                           <div class="p-6">
+                               <h3 class="text-xl font-bold mb-2">${p.title}</h3>
+                               <p class="text-gray-600 text-sm">${p.description}</p>
+                           </div>
+                   </div>`;
+            });
+        }
+
+        function renderGaleri() {
+            const container = document.getElementById('galeri-container');
+            container.innerHTML = '';
+            const columns = [[], [], [], []];
+            websiteContent.galeri.forEach((g, index) => {
+                columns[index % 4].push(g);
+            });
+
+            columns.forEach(col => {
+                const colDiv = document.createElement('div');
+                colDiv.className = 'grid gap-4';
+                col.forEach(g => {
+                    colDiv.innerHTML += `<div><img onclick="showImageModal(this.src)" class="h-auto max-w-full rounded-lg shadow-md cursor-pointer transform hover:scale-105 transition-transform" src="${g.src}" alt="${g.alt}"></div>`;
+                });
+                container.appendChild(colDiv);
+            });
+        }
+
+        function renderSPMBAdminForm() {
+            const container = document.getElementById('spmb-timeline-editor');
+            container.innerHTML = '';
+            websiteContent.spmb.timeline.forEach((item, index) => {
+                container.innerHTML += `
+                    <div class="p-3 bg-gray-50 rounded-md border">
+                        <p class="font-semibold mb-2">Tahap ${index + 1}</p>
+                        <input type="text" value="${item.title}" data-index="${index}" data-field="title" class="w-full p-2 border rounded-md mb-2 spmb-input" placeholder="Judul Tahap">
+                        <input type="text" value="${item.date}" data-index="${index}" data-field="date" class="w-full p-2 border rounded-md mb-2 spmb-input" placeholder="Tanggal">
+                        <textarea rows="2" data-index="${index}" data-field="description" class="w-full p-2 border rounded-md spmb-input" placeholder="Deskripsi">${item.description}</textarea>
+                    </div>
+                `;
+            });
+            document.getElementById('edit-spmb-syarat-umum').value = websiteContent.spmb.syaratUmum.join('\n');
+            document.getElementById('edit-spmb-berkas').value = websiteContent.spmb.berkas.join('\n');
+        }
+
+        function renderFasilitasAdminTable() {
+            const container = document.getElementById('fasilitas-table-container');
+            let tableHTML = `<table class="w-full text-left">
+                <thead><tr class="bg-gray-100"><th class="p-3">Ikon</th><th class="p-3">Nama</th><th class="p-3">Deskripsi</th><th class="p-3">Aksi</th></tr></thead>
+                <tbody>`;
+            websiteContent.fasilitas.forEach(f => {
+                tableHTML += `<tr class="border-b">
+                    <td class="p-3"><i class="${f.icon} text-2xl text-blue-600"></i></td>
+                    <td class="p-3">${f.name} <span class="text-xs text-gray-500">${f.status || ''}</span></td>
+                    <td class="p-3 text-sm">${f.description}</td>
+                    <td class="p-3 whitespace-nowrap">
+                        <button onclick="editFasilitas(${f.id})" class="text-blue-600 hover:text-blue-800 mr-4" title="Edit"><i class="fas fa-edit"></i></button>
+                        <button onclick="confirmDelete(${f.id}, 'fasilitas')" class="text-red-600 hover:text-red-800" title="Hapus"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>`;
+            });
+            tableHTML += `</tbody></table>`;
+            container.innerHTML = tableHTML;
+        }
+
+        function renderStrukturAdminPreview() {
+            const tbody = document.getElementById('struktur-preview-table');
+            tbody.innerHTML = '';
+            websiteContent.users.forEach(user => {
+                const row = `
+                    <tr class="border-b">
+                        <td class="p-3"><img src="${user.foto_url || 'https://placehold.co/50x50'}" class="w-12 h-12 rounded-full object-cover"></td>
+                        <td class="p-3 font-semibold">${user.name}</td>
+                        <td class="p-3">${user.jabatan || 'N/A'}</td>
+                        <td class="p-3"><span class="px-2 py-1 text-xs rounded-full ${user.role === 'admin' ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'}">${user.role}</span></td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        function renderPrestasiAdminTable() {
+            const container = document.getElementById('prestasi-table-container');
+            let tableHTML = `<table class="w-full text-left">
+                <thead><tr class="bg-gray-100"><th class="p-3">Gambar</th><th class="p-3">Judul</th><th class="p-3">Deskripsi</th><th class="p-3">Aksi</th></tr></thead>
+                <tbody>`;
+            websiteContent.prestasi.forEach(p => {
+                tableHTML += `<tr class="border-b">
+                    <td class="p-3"><img src="${p.image}" class="w-24 h-16 object-cover rounded"></td>
+                    <td class="p-3">${p.title}</td>
+                    <td class="p-3 text-sm">${p.description}</td>
+                    <td class="p-3 whitespace-nowrap">
+                        <button onclick="editPrestasi(${p.id})" class="text-blue-600 hover:text-blue-800 mr-4" title="Edit"><i class="fas fa-edit"></i></button>
+                        <button onclick="confirmDelete(${p.id}, 'prestasi')" class="text-red-600 hover:text-red-800" title="Hapus"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>`;
+            });
+            tableHTML += `</tbody></table>`;
+            container.innerHTML = tableHTML;
+        }
+
+        function renderGaleriAdminTable() {
+            const container = document.getElementById('galeri-table-container');
+            let tableHTML = `<table class="w-full text-left">
+                <thead><tr class="bg-gray-100"><th class="p-3">Gambar</th><th class="p-3">URL</th><th class="p-3">Deskripsi (Alt)</th><th class="p-3">Aksi</th></tr></thead>
+                <tbody>`;
+            websiteContent.galeri.forEach(g => {
+                tableHTML += `<tr class="border-b">
+                    <td class="p-3"><img src="${g.src}" class="w-24 h-16 object-cover rounded"></td>
+                    <td class="p-3 text-xs truncate" style="max-width: 200px">${g.src}</td>
+                    <td class="p-3 text-sm">${g.alt}</td>
+                    <td class="p-3 whitespace-nowrap">
+                        <button onclick="editGaleri(${g.id})" class="text-blue-600 hover:text-blue-800 mr-4" title="Edit"><i class="fas fa-edit"></i></button>
+                        <button onclick="confirmDelete(${g.id}, 'galeri')" class="text-red-600 hover:text-red-800" title="Hapus"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>`;
+            });
+            tableHTML += `</tbody></table>`;
+            container.innerHTML = tableHTML;
+        }
+
+        function renderPosts() {
+            const newsContainer = document.getElementById('news-container');
+            const tableBody = document.getElementById('posts-table-body');
+            newsContainer.innerHTML = '';
+            if (tableBody) tableBody.innerHTML = '';
+
+            posts.forEach(post => {
+                const newsCard = document.createElement('div');
+                newsCard.className = "bg-white rounded-xl shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300";
+                newsCard.innerHTML = `
+                    <img src="${post.image}" alt="${post.title}" class="w-full h-48 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/600x400/cccccc/ffffff?text=Image+Error';">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2">${post.title}</h3>
+                        <p class="text-gray-600 mb-4 text-sm">${post.content}</p>
+                        <button onclick="showNewsModal('${post.id}')" class="font-semibold text-blue-600 hover:text-blue-800">Baca Selengkapnya →</button>
+                    </div>`;
+                newsContainer.appendChild(newsCard);
+
+                if (tableBody) {
+                    const tableRow = document.createElement('tr');
+                    tableRow.className = "border-b";
+                    tableRow.innerHTML = `
+                        <td class="p-3">${post.title}</td>
+                        <td class="p-3">${post.content.substring(0, 50)}...</td>
+                        <td class="p-3 whitespace-nowrap">
+                            <button onclick="editPost(${post.id})" class="text-blue-600 hover:text-blue-800 mr-4" title="Edit"><i class="fas fa-edit"></i></button>
+                            <button onclick="confirmDelete(${post.id}, 'berita')" class="text-red-600 hover:text-red-800" title="Hapus"><i class="fas fa-trash"></i></button>
+                        </td>`;
+                    tableBody.appendChild(tableRow);
+                }
+            });
+
+            renderAnggotaPostsTable();
+        }
+
+        function renderPasswordResets() {
+            const container = document.getElementById('reset-requests-container');
+            if (!container) return;
+            container.innerHTML = '';
+
+            if (websiteContent.passwordResets.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 italic">Tidak ada permintaan reset saat ini.</p>';
+                return;
+            }
+
+            websiteContent.passwordResets.forEach((username, index) => {
+                const div = document.createElement('div');
+                div.className = 'flex items-center justify-between p-4 bg-gray-50 rounded-lg';
+                div.innerHTML = `
+                    <div>
+                        <span class="font-semibold">${username}</span>
+                        <p class="text-sm text-gray-500">Meminta reset password</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <input type="text" id="new-password-for-${username}" placeholder="Password Baru" class="p-2 border rounded-md text-sm">
+                        <button onclick="resetAnggotaPasswordAdmin('${username}')" class="bg-green-500 text-white px-3 py-2 rounded-lg text-sm hover:bg-green-600">Reset</button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function updateAdminNotificationBadge() {
+            const unreadResets = websiteContent.passwordResets.length;
+            const unreadActivities = websiteContent.activityLog.filter(log => !log.read).length;
+            const totalUnread = unreadResets + unreadActivities;
+
+            const badge = document.getElementById('admin-notif-badge');
+            const tabBadge = document.getElementById('activity-tab-badge');
+
+            if (badge) {
+                if (totalUnread > 0) {
+                    badge.textContent = totalUnread;
+                    badge.classList.remove('hidden');
+                } else {
+                    badge.classList.add('hidden');
+                }
+            }
+               if (tabBadge) {
+                tabBadge.classList.toggle('hidden', unreadActivities === 0);
+            }
+        }
+
+        function handleProfilUpdate(e) {
+            e.preventDefault();
+            const profil = websiteContent.profil;
+            profil.kepsek.nama = document.getElementById('edit-kepsek-nama').value;
+            profil.kepsek.jabatan = document.getElementById('edit-kepsek-jabatan').value;
+            profil.kepsek.foto = document.getElementById('edit-kepsek-foto').value;
+            profil.kepsek.sambutan = document.getElementById('edit-kepsek-sambutan').value;
+            profil.visi = document.getElementById('edit-visi').value;
+            profil.misi = document.getElementById('edit-misi').value.split('\n').filter(line => line.trim() !== '');
+            renderWebsiteContent();
+            showNotification('Perubahan profil berhasil disimpan', 'success');
+        }
+
+        function handleKontakUpdate(e) {
+            e.preventDefault();
+            const kontak = websiteContent.kontak;
+            kontak.alamat = document.getElementById('edit-kontak-alamat').value;
+            kontak.telepon = document.getElementById('edit-kontak-telepon').value;
+            kontak.email = document.getElementById('edit-kontak-email').value;
+            kontak.jam = document.getElementById('edit-kontak-jam').value;
+            renderWebsiteContent();
+            showNotification('Perubahan kontak berhasil disimpan', 'success');
+        }
+
+        function handleSpmbUpdate(e) {
+            e.preventDefault();
+            const inputs = document.querySelectorAll('.spmb-input');
+            inputs.forEach(input => {
+                const index = input.dataset.index;
+                const field = input.dataset.field;
+                websiteContent.spmb.timeline[index][field] = input.value;
+            });
+            websiteContent.spmb.syaratUmum = document.getElementById('edit-spmb-syarat-umum').value.split('\n').filter(Boolean);
+            websiteContent.spmb.berkas = document.getElementById('edit-spmb-berkas').value.split('\n').filter(Boolean);
+            renderSPMB();
+            showNotification('Informasi SPMB berhasil diperbarui', 'success');
+        }
+
+        function handleFasilitasSubmit(e) {
+            e.preventDefault();
+            const id = document.getElementById('fasilitas-id').value;
+            const data = {
+                name: document.getElementById('fasilitas-nama').value,
+                icon: document.getElementById('fasilitas-icon').value,
+                description: document.getElementById('fasilitas-deskripsi').value,
+                status: document.getElementById('fasilitas-status').value
+            };
+            if(id) {
+                const index = websiteContent.fasilitas.findIndex(f => f.id == id);
+                websiteContent.fasilitas[index] = { id: parseInt(id), ...data };
+            } else {
+                data.id = Date.now();
+                websiteContent.fasilitas.push(data);
+            }
+            renderFasilitas();
+            renderFasilitasAdminTable();
+            resetFasilitasForm();
+            showNotification('Fasilitas berhasil disimpan.', 'success');
+        }
+
+        function handlePrestasiSubmit(e) {
+               e.preventDefault();
+            const id = document.getElementById('prestasi-id').value;
+            const data = {
+                title: document.getElementById('prestasi-judul').value,
+                description: document.getElementById('prestasi-deskripsi').value,
+                image: document.getElementById('prestasi-gambar').value
+            };
+            if (id) {
+                const index = websiteContent.prestasi.findIndex(p => p.id == id);
+                websiteContent.prestasi[index] = { id: parseInt(id), ...data };
+            } else {
+                data.id = Date.now();
+                websiteContent.prestasi.unshift(data);
+            }
+            renderPrestasi();
+            renderPrestasiAdminTable();
+            resetPrestasiForm();
+            showNotification('Prestasi berhasil disimpan.', 'success');
+        }
+
+        function handleGaleriSubmit(e) {
+            e.preventDefault();
+            const id = document.getElementById('galeri-id').value;
+            const data = {
+                src: document.getElementById('galeri-src').value,
+                alt: document.getElementById('galeri-alt').value,
+            };
+            if (id) {
+                const index = websiteContent.galeri.findIndex(g => g.id == id);
+                websiteContent.galeri[index] = { id: parseInt(id), ...data };
+            } else {
+                data.id = Date.now();
+                websiteContent.galeri.push(data);
+            }
+            renderGaleri();
+            renderGaleriAdminTable();
+            resetGaleriForm();
+            showNotification('Gambar galeri berhasil disimpan.', 'success');
+        }
+
+        function editFasilitas(id) {
+            const f = websiteContent.fasilitas.find(f => f.id === id);
+            document.getElementById('fasilitas-id').value = f.id;
+            document.getElementById('fasilitas-nama').value = f.name;
+            document.getElementById('fasilitas-icon').value = f.icon;
+            document.getElementById('fasilitas-deskripsi').value = f.description;
+            document.getElementById('fasilitas-status').value = f.status;
+            document.getElementById('cancel-edit-fasilitas-btn').classList.remove('hidden');
+            document.getElementById('fasilitas-form-title').textContent = "Edit Fasilitas";
+            document.getElementById('admin-tab-fasilitas').scrollIntoView();
+        }
+        function resetFasilitasForm() {
+            document.getElementById('fasilitas-form').reset();
+            document.getElementById('fasilitas-id').value = '';
+            document.getElementById('cancel-edit-fasilitas-btn').classList.add('hidden');
+            document.getElementById('fasilitas-form-title').textContent = "Tambah Fasilitas";
+        }
+
+        function editPrestasi(id) {
+            const p = websiteContent.prestasi.find(p => p.id === id);
+            document.getElementById('prestasi-id').value = p.id;
+            document.getElementById('prestasi-judul').value = p.title;
+            document.getElementById('prestasi-deskripsi').value = p.description;
+            document.getElementById('prestasi-gambar').value = p.image;
+            document.getElementById('cancel-edit-prestasi-btn').classList.remove('hidden');
+            document.getElementById('prestasi-form-title').textContent = "Edit Prestasi";
+            document.getElementById('admin-tab-prestasi').scrollIntoView();
+        }
+        function resetPrestasiForm() {
+            document.getElementById('prestasi-form').reset();
+            document.getElementById('prestasi-id').value = '';
+            document.getElementById('cancel-edit-prestasi-btn').classList.add('hidden');
+            document.getElementById('prestasi-form-title').textContent = "Tambah Prestasi";
+        }
+
+        function editGaleri(id) {
+            const g = websiteContent.galeri.find(g => g.id === id);
+            document.getElementById('galeri-id').value = g.id;
+            document.getElementById('galeri-src').value = g.src;
+            document.getElementById('galeri-alt').value = g.alt;
+            document.getElementById('cancel-edit-galeri-btn').classList.remove('hidden');
+            document.getElementById('galeri-form-title').textContent = "Edit Gambar Galeri";
+            document.getElementById('admin-tab-galeri').scrollIntoView();
+        }
+        function resetGaleriForm() {
+            document.getElementById('galeri-form').reset();
+            document.getElementById('galeri-id').value = '';
+            document.getElementById('cancel-edit-galeri-btn').classList.add('hidden');
+            document.getElementById('galeri-form-title').textContent = "Tambah Gambar Galeri";
+        }
+
+        function showAdminTab(tabName) {
+            document.querySelectorAll('.admin-tab-content').forEach(tab => tab.classList.add('hidden'));
+            document.getElementById(`admin-tab-${tabName}`).classList.remove('hidden');
+
+            document.querySelectorAll('.admin-tab').forEach(button => button.classList.remove('active-tab'));
+            document.querySelector(`#admin-tabs button[onclick="showAdminTab('${tabName}')"]`).classList.add('active-tab');
+
+            switch(tabName) {
+                case 'pengguna':
+                    renderUserManagementTable();
+                    renderPasswordResets();
+                    break;
+                case 'siswa':
+                    renderSiswaManagementTable();
+                    break;
+                case 'lulusan':
+                    renderLulusanTable();
+                    break;
+                case 'aktivitas':
+                    renderActivityLog();
+                    break;
+                case 'profil':
+                    const profil = websiteContent.profil;
+                    document.getElementById('edit-kepsek-nama').value = profil.kepsek.nama;
+                    document.getElementById('edit-kepsek-jabatan').value = profil.kepsek.jabatan;
+                    document.getElementById('edit-kepsek-foto').value = profil.kepsek.foto;
+                    document.getElementById('edit-kepsek-sambutan').value = profil.kepsek.sambutan;
+                    document.getElementById('edit-visi').value = profil.visi;
+                    document.getElementById('edit-misi').value = profil.misi.join('\n');
+                    break;
+                case 'kontak':
+                    const kontak = websiteContent.kontak;
+                    document.getElementById('edit-kontak-alamat').value = kontak.alamat;
+                    document.getElementById('edit-kontak-telepon').value = kontak.telepon;
+                    document.getElementById('edit-kontak-email').value = kontak.email;
+                    document.getElementById('edit-kontak-jam').value = kontak.jam;
+                    break;
+                case 'spmb':
+                    renderSPMBAdminForm();
+                    break;
+                case 'struktur':
+                    renderStrukturAdminPreview();
+                    break;
+            }
+        }
+
+        function showAnggotaTab(tabName) {
+            document.querySelectorAll('.anggota-tab-content').forEach(tab => tab.classList.add('hidden'));
+            document.getElementById(`anggota-tab-${tabName}`).classList.remove('hidden');
+
+            document.querySelectorAll('.anggota-tab').forEach(button => button.classList.remove('active-tab'));
+            document.querySelector(`#anggota-tabs button[onclick="showAnggotaTab('${tabName}')"]`).classList.add('active-tab');
+
+               if (tabName === 'siswa') {
+                renderAnggotaSiswaTable();
+            } else if (tabName === 'berita') {
+                renderAnggotaPostsTable();
+            }
+        }
+
+        function addNewUser(e) {
+            e.preventDefault();
+            const name = document.getElementById('new-user-name').value;
+            const username = document.getElementById('new-username').value;
+            const password = document.getElementById('new-password').value;
+            const role = document.getElementById('new-user-role').value;
+            const jabatan = document.getElementById('new-user-jabatan').value;
+            const foto_url = document.getElementById('new-user-foto').value;
+
+            const userExists = websiteContent.users.some(user => user.username === username);
+            if (userExists) {
+                showNotification('Username sudah ada. Silakan pilih username lain.', 'error');
+                return;
+            }
+
+            websiteContent.users.push({ name, username, password, role, jabatan, foto_url });
+            renderUserManagementTable();
+            renderStrukturOrganisasi();
+            renderStrukturAdminPreview();
+            document.getElementById('add-user-form').reset();
+            showNotification('Pengguna baru berhasil ditambahkan!', 'success');
+        }
+
+        function togglePasswordVisibility(username, btn) {
+            const user = websiteContent.users.find(u => u.username === username);
+            if (!user) return;
+            const icon = btn.querySelector('i');
+            const passwordSpan = btn.parentElement.querySelector('.password-text');
+            if (icon.classList.contains('fa-eye')) {
+                passwordSpan.textContent = user.password;
+                icon.classList.replace('fa-eye', 'fa-eye-slash');
+            } else {
+                passwordSpan.textContent = '••••••••';
+                icon.classList.replace('fa-eye-slash', 'fa-eye');
+            }
+        }
+
+        function renderUserManagementTable() {
+            const tableBody = document.getElementById('users-table-body');
+            if (!tableBody) return;
+            tableBody.innerHTML = '';
+
+            websiteContent.users.forEach(user => {
+                const row = tableBody.insertRow();
+                row.className = 'border-b align-middle';
+
+                row.insertCell().textContent = user.name;
+                row.insertCell().textContent = user.username;
+                row.insertCell().textContent = user.jabatan || '-';
+
+                const passwordCell = row.insertCell();
+                passwordCell.className = 'p-3';
+                passwordCell.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <span class="password-text font-mono">••••••••</span>
+                        <button onclick="togglePasswordVisibility('${user.username}', this)" class="text-gray-500 hover:text-gray-800 ml-2" title="Tampilkan/Sembunyikan Password">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>`;
+
+                const roleCell = row.insertCell();
+                roleCell.className = 'p-3';
+                const isAdmin = user.role === 'admin';
+                roleCell.innerHTML = `
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" class="sr-only peer" onchange="changeUserRole('${user.username}', this.checked)" ${isAdmin ? 'checked' : ''}>
+                        <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                        <span class="ms-3 text-sm font-medium text-gray-900">${isAdmin ? 'Admin' : 'Anggota'}</span>
+                    </label>
+                `;
+
+                const actionCell = row.insertCell();
+                actionCell.className = 'p-3 whitespace-nowrap';
+                actionCell.innerHTML = `
+                    <button onclick="showEditUserModal('${user.username}')" class="text-yellow-600 hover:text-yellow-800 mr-4" title="Edit Pengguna"><i class="fas fa-pencil-alt"></i></button>
+                    <button onclick="confirmDeleteUser('${user.username}')" class="text-red-600 hover:text-red-800" title="Hapus Pengguna"><i class="fas fa-trash"></i></button>
+                `;
+                  Array.from(row.cells).forEach(cell => cell.classList.add('p-3'));
+            });
+        }
+
+        function changeUserRole(username, isChecked) {
+            const newRole = isChecked ? 'admin' : 'anggota';
+            const userIndex = websiteContent.users.findIndex(user => user.username === username);
+            if (userIndex !== -1) {
+                websiteContent.users[userIndex].role = newRole;
+                showNotification(`Status pengguna ${username} berhasil diubah menjadi ${newRole}.`, 'success');
+                if (currentUser.username === username) {
+                    currentUser.isAdmin = (newRole === 'admin');
+                    updateUserStatus();
+                    if (newRole === 'anggota') {
+                        document.getElementById('admin-panel').style.display = 'none';
+                        document.getElementById('admin-nav-link').classList.add('hidden');
+                        document.getElementById('mobile-admin-nav-link').classList.add('hidden');
+                        document.getElementById('anggota-panel').style.display = 'block';
+                        document.getElementById('anggota-nav-link').classList.remove('hidden');
+                        document.getElementById('mobile-anggota-nav-link').classList.remove('hidden');
+                    }
+                }
+                renderUserManagementTable();
+            }
+        }
+
+        function showEditUserModal(username) {
+            const user = websiteContent.users.find(u => u.username === username);
+            if (!user) return;
+
+            document.getElementById('edit-original-username').value = user.username;
+            document.getElementById('edit-user-name').value = user.name;
+            document.getElementById('edit-username').value = user.username;
+            document.getElementById('edit-user-password').value = '';
+            document.getElementById('edit-user-jabatan').value = user.jabatan || '';
+            document.getElementById('edit-user-foto').value = user.foto_url || '';
+
+            openModalById('edit-user-modal');
+        }
+
+        function showEditMyProfileModal() {
+            showEditUserModal(currentUser.username);
+        }
+
+        function handleUpdateUser(e) {
+            e.preventDefault();
+            const originalUsername = document.getElementById('edit-original-username').value;
+            const newName = document.getElementById('edit-user-name').value;
+            const newUsername = document.getElementById('edit-username').value;
+            const newPassword = document.getElementById('edit-user-password').value;
+            const newJabatan = document.getElementById('edit-user-jabatan').value;
+            const newFotoUrl = document.getElementById('edit-user-foto').value;
+
+            const userIndex = websiteContent.users.findIndex(u => u.username === originalUsername);
+            if (userIndex === -1) return;
+
+            const isUsernameTaken = websiteContent.users.some(u => u.username === newUsername && u.username !== originalUsername);
+            if(isUsernameTaken) {
+                showNotification('Username sudah digunakan. Silakan pilih yang lain.', 'error');
+                return;
+            }
+
+            const userToUpdate = websiteContent.users[userIndex];
+            const isSelfEditByAnggota = currentUser.username === originalUsername && !currentUser.isAdmin;
+
+            if (isSelfEditByAnggota) {
+                logActivity(originalUsername, 'memperbarui profil & password mereka.');
+            }
+
+            userToUpdate.name = newName;
+            userToUpdate.username = newUsername;
+            userToUpdate.jabatan = newJabatan;
+            userToUpdate.foto_url = newFotoUrl;
+            if (newPassword) {
+                userToUpdate.password = newPassword;
+            }
+
+            if (currentUser.username === originalUsername) {
+                currentUser.username = newUsername;
+                updateUserStatus();
+            }
+
+            showNotification('Data pengguna berhasil diperbarui!', 'success');
+            closeModalById('edit-user-modal');
+            renderUserManagementTable();
+            renderStrukturOrganisasi();
+            renderStrukturAdminPreview();
+        }
+
+        function confirmDeleteUser(username) {
+            openConfirmationModal({
+                title: 'Hapus Pengguna',
+                message: `Apakah Anda yakin ingin menghapus pengguna <b>${username}</b>? Tindakan ini tidak dapat dibatalkan.`,
+                yesText: 'Ya, Hapus',
+                yesClass: 'bg-red-600 hover:bg-red-700',
+                onConfirm: () => deleteUser(username)
+            });
+        }
+
+        function deleteUser(username) {
+            const initialLength = websiteContent.users.length;
+            websiteContent.users = websiteContent.users.filter(user => user.username !== username);
+            if (websiteContent.users.length < initialLength) {
+                showNotification(`Pengguna ${username} berhasil dihapus.`, 'success');
+                renderUserManagementTable();
+                renderStrukturOrganisasi();
+                renderStrukturAdminPreview();
+                if (currentUser.username === username) {
+                    logout();
+                }
+            } else {
+                showNotification('Gagal menghapus pengguna. Pengguna tidak ditemukan.', 'error');
+            }
+        }
+
+        function handleSiswaSubmit(e) {
+            e.preventDefault();
+            const siswaId = document.getElementById('siswa-id').value;
+            const nama = document.getElementById('siswa-name').value;
+            const kelas = parseInt(document.getElementById('siswa-kelas').value);
+
+            if (siswaId) {
+                const index = websiteContent.pesertaDidik.findIndex(s => s.id == siswaId);
+                if (index !== -1) {
+                    websiteContent.pesertaDidik[index].nama = nama;
+                    websiteContent.pesertaDidik[index].kelas = kelas;
+                }
+                showNotification('Data siswa berhasil diperbarui!', 'success');
+                  if (!currentUser.isAdmin) {
+                    logActivity(currentUser.username, `memperbarui data siswa: ${nama}`);
+                  }
+            } else {
+                const newId = Date.now();
+                websiteContent.pesertaDidik.push({ id: newId, nama, kelas });
+                showNotification('Siswa baru berhasil ditambahkan!', 'success');
+                  if (!currentUser.isAdmin) {
+                    logActivity(currentUser.username, `menambahkan siswa baru: ${nama}`);
+                  }
+            }
+            renderSiswaManagementTable();
+            renderAnggotaSiswaTable();
+            closeModalById('edit-siswa-modal');
+        }
+
+        function openSiswaModal(id = null) {
+            const formTitle = document.getElementById('siswa-form-title');
+            document.getElementById('siswa-form').reset();
+            document.getElementById('siswa-id').value = '';
+
+            if (id) {
+                const siswa = websiteContent.pesertaDidik.find(s => s.id === id);
+                if (siswa) {
+                    formTitle.textContent = `Edit Siswa: ${siswa.nama}`;
+                    document.getElementById('siswa-id').value = siswa.id;
+                    document.getElementById('siswa-name').value = siswa.nama;
+                    document.getElementById('siswa-kelas').value = siswa.kelas;
+                }
+            } else {
+                   formTitle.textContent = 'Tambah Peserta Didik Baru';
+            }
+            openModalById('edit-siswa-modal');
+        }
+
+        function editSiswa(id) {
+            openSiswaModal(id);
+        }
+
+        function confirmDeleteSiswa(id, actor = 'admin') {
+            const siswa = websiteContent.pesertaDidik.find(s => s.id === id);
+            if (!siswa) return;
+
+            openConfirmationModal({
+                title: 'Hapus Peserta Didik',
+                message: `Apakah Anda yakin ingin menghapus data <b>${siswa.nama}</b>? Tindakan ini tidak dapat dibatalkan.`,
+                yesText: 'Ya, Hapus',
+                yesClass: 'bg-red-600 hover:bg-red-700',
+                onConfirm: () => deleteSiswa(id, actor)
+            });
+        }
+
+        function deleteSiswa(id, actor = 'admin') {
+            const siswaIndex = websiteContent.pesertaDidik.findIndex(s => s.id === id);
+              if (siswaIndex === -1) return;
+
+            const siswa = websiteContent.pesertaDidik[siswaIndex];
+            websiteContent.pesertaDidik.splice(siswaIndex, 1);
+
+            renderSiswaManagementTable();
+            renderAnggotaSiswaTable();
+            showNotification('Data siswa berhasil dihapus.', 'success');
+
+            if (actor !== 'admin') {
+                logActivity(actor, `menghapus siswa: ${siswa.nama}`);
+            }
+        }
+
+        function renderSiswaManagementTable() {
+            const tableBody = document.getElementById('siswa-table-body');
+            if (!tableBody) return;
+            tableBody.innerHTML = '';
+            websiteContent.pesertaDidik.sort((a, b) => a.kelas - b.kelas || a.nama.localeCompare(b.nama)).forEach((siswa, index) => {
+                const row = tableBody.insertRow();
+                row.className = 'border-b';
+                row.innerHTML = `
+                    <td class="p-3">${index + 1}</td>
+                    <td class="p-3">${siswa.nama}</td>
+                    <td class="p-3">${siswa.kelas}</td>
+                    <td class="p-3 whitespace-nowrap">
+                        <button onclick="confirmSiswaAction(${siswa.id}, 'promote')" class="text-green-600 hover:text-green-800 mr-2" title="Naikkan Kelas"><i class="fas fa-arrow-up"></i></button>
+                        <button onclick="confirmSiswaAction(${siswa.id}, 'retain')" class="text-gray-500 hover:text-gray-700 mr-2" title="Tinggal Kelas"><i class="fas fa-anchor"></i></button>
+                        <button onclick="editSiswa(${siswa.id})" class="text-blue-600 hover:text-blue-800 mr-2" title="Edit"><i class="fas fa-edit"></i></button>
+                        <button onclick="confirmDeleteSiswa(${siswa.id})" class="text-red-600 hover:text-red-800" title="Hapus"><i class="fas fa-trash"></i></button>
+                    </td>
+                `;
+            });
+        }
+
+        function renderAnggotaSiswaTable() {
+            const tableBody = document.getElementById('anggota-siswa-table-body');
+            const tambahBtn = document.getElementById('anggota-tambah-siswa-btn');
+            const aksiHeader = document.getElementById('anggota-siswa-aksi-header');
+
+            if (!tableBody || !tambahBtn || !aksiHeader) return;
+            tableBody.innerHTML = '';
+
+            const loggedInUser = websiteContent.users.find(u => u.username === currentUser.username);
+            if (!loggedInUser) {
+                tableBody.innerHTML = `<tr><td colspan="4" class="p-3 text-center italic">Gagal memuat data pengguna.</td></tr>`;
+                return;
+            }
+
+            let myStudents = [];
+            const isSubjectTeacher = loggedInUser.jabatan === 'Guru Agama Islam' || loggedInUser.jabatan === 'Guru Olahraga';
+            const isClassTeacher = !!loggedInUser.rombel;
+
+            tambahBtn.classList.toggle('hidden', !isClassTeacher);
+            aksiHeader.classList.toggle('hidden', !isClassTeacher);
+
+
+            if (isSubjectTeacher) {
+                myStudents = websiteContent.pesertaDidik;
+            } else if (isClassTeacher) {
+                myStudents = websiteContent.pesertaDidik.filter(s => s.kelas === loggedInUser.rombel);
+            }
+
+            if (myStudents.length === 0) {
+                   tableBody.innerHTML = `<tr><td colspan="4" class="p-3 text-center italic">Tidak ada data siswa.</td></tr>`;
+                   return;
+            }
+
+            myStudents.sort((a, b) => a.kelas - b.kelas || a.nama.localeCompare(b.nama));
+
+            myStudents.forEach((siswa, index) => {
+                const row = tableBody.insertRow();
+                row.className = 'border-b';
+
+                let aksiCellHTML = '';
+                if(isClassTeacher && loggedInUser.rombel === siswa.kelas) {
+                        aksiCellHTML = `
+                            <button onclick="confirmSiswaAction(${siswa.id}, 'promote', '${currentUser.username}')" class="text-green-600 hover:text-green-800 mr-2" title="Naikkan Kelas"><i class="fas fa-arrow-up"></i></button>
+                            <button onclick="confirmSiswaAction(${siswa.id}, 'retain', '${currentUser.username}')" class="text-gray-500 hover:text-gray-700 mr-2" title="Tinggal Kelas"><i class="fas fa-anchor"></i></button>
+                            <button onclick="editSiswa(${siswa.id})" class="text-blue-600 hover:text-blue-800 mr-2" title="Edit"><i class="fas fa-edit"></i></button>
+                            <button onclick="confirmDeleteSiswa(${siswa.id}, '${currentUser.username}')" class="text-red-600 hover:text-red-800" title="Hapus"><i class="fas fa-trash"></i></button>
+                        `;
+                }
+
+                  row.innerHTML = `
+                    <td class="p-3">${index + 1}</td>
+                    <td class="p-3">${siswa.nama}</td>
+                    <td class="p-3">${siswa.kelas}</td>
+                    <td class="p-3 whitespace-nowrap ${!isClassTeacher ? 'hidden' : ''}">${aksiCellHTML}</td>
+                  `;
+            });
+        }
+
+        function renderLulusanTable() {
+            const tableBody = document.getElementById('lulusan-table-body');
+            if (!tableBody) return;
+            tableBody.innerHTML = '';
+            if (!websiteContent.lulusan) websiteContent.lulusan = [];
+            websiteContent.lulusan.sort((a,b) => b.tahunLulus - a.tahunLulus || a.nama.localeCompare(b.nama)).forEach((lulusan, index) => {
+                   const row = tableBody.insertRow();
+                   row.className = 'border-b';
+                   row.innerHTML = `
+                     <td class="p-3">${index + 1}</td>
+                     <td class="p-3">${lulusan.nama}</td>
+                     <td class="p-3">${lulusan.tahunLulus}</td>
+                   `;
+            });
+        }
+
+        function confirmProsesKenaikanKelas(){
+            openConfirmationModal({
+                title: 'Konfirmasi Kenaikan Kelas',
+                message: 'Apakah Anda yakin ingin memproses kenaikan kelas untuk semua siswa? Siswa kelas 6 akan diluluskan. Tindakan ini tidak dapat dibatalkan.',
+                yesText: 'Ya, Proses Sekarang',
+                yesClass: 'bg-purple-600 hover:bg-purple-700',
+                onConfirm: prosesKenaikanKelas
+            });
+        }
+
+        function prosesKenaikanKelas() {
+            const tahunLulus = new Date().getFullYear();
+            const siswaBaru = [];
+              if (!websiteContent.lulusan) websiteContent.lulusan = [];
+
+            websiteContent.pesertaDidik.forEach(siswa => {
+                if (siswa.kelas === 6) {
+                    websiteContent.lulusan.push({ ...siswa, tahunLulus });
+                } else {
+                    siswa.kelas += 1;
+                    siswaBaru.push(siswa);
+                }
+            });
+
+            websiteContent.pesertaDidik = siswaBaru;
+
+            renderSiswaManagementTable();
+            renderAnggotaSiswaTable();
+            renderLulusanTable();
+            showNotification('Proses kenaikan kelas dan kelulusan berhasil diselesaikan.', 'success');
+        }
+
+        function confirmSiswaAction(id, action, actor = 'admin') {
+            const siswa = websiteContent.pesertaDidik.find(s => s.id === id);
+            if (!siswa) return;
+
+            let title, message, yesText, yesClass, onConfirm;
+
+            if (action === 'promote') {
+                title = 'Konfirmasi Kenaikan Kelas';
+                message = `Naikkan <b>${siswa.nama}</b> ke kelas ${siswa.kelas + 1}?${siswa.kelas === 6 ? ' (Lulus)' : ''}`;
+                yesText = 'Ya, Naikkan';
+                yesClass = 'bg-green-600 hover:bg-green-700';
+                onConfirm = () => promoteSiswa(id, actor);
+            } else {
+                title = 'Konfirmasi Tinggal Kelas';
+                message = `Tetapkan <b>${siswa.nama}</b> untuk tinggal di kelas ${siswa.kelas}?`;
+                yesText = 'Ya, Tetapkan';
+                yesClass = 'bg-yellow-500 hover:bg-yellow-600';
+                onConfirm = () => {
+                    showNotification(`${siswa.nama} tetap di kelas ${siswa.kelas}.`, 'info');
+                    if(actor !== 'admin') {
+                            logActivity(actor, `menetapkan ${siswa.nama} tinggal di kelas ${siswa.kelas}.`);
+                    }
+                }
+            }
+
+            openConfirmationModal({ title, message, yesText, yesClass, onConfirm });
+        }
+
+        function promoteSiswa(id, actor = 'admin') {
+            const siswaIndex = websiteContent.pesertaDidik.findIndex(s => s.id === id);
+            if (siswaIndex === -1) return;
+
+            const siswa = websiteContent.pesertaDidik[siswaIndex];
+            if (!websiteContent.lulusan) websiteContent.lulusan = [];
+
+            if (siswa.kelas === 6) {
+                websiteContent.lulusan.push({ ...siswa, tahunLulus: new Date().getFullYear() });
+                websiteContent.pesertaDidik.splice(siswaIndex, 1);
+                showNotification(`${siswa.nama} berhasil diluluskan.`, 'success');
+                if (actor !== 'admin') logActivity(actor, `meluluskan siswa: ${siswa.nama}`);
+            } else {
+                siswa.kelas += 1;
+                showNotification(`${siswa.nama} berhasil dinaikkan ke kelas ${siswa.kelas}.`, 'success');
+                if (actor !== 'admin') logActivity(actor, `menaikkan kelas siswa: ${siswa.nama}`);
+            }
+
+            renderSiswaManagementTable();
+            renderAnggotaSiswaTable();
+            renderLulusanTable();
+        }
+
+        function confirmDeleteAllSiswa() {
+            openConfirmationModal({
+                title: 'Hapus Semua Peserta Didik',
+                message: 'Apakah Anda yakin ingin menghapus <b>SEMUA</b> data peserta didik? Tindakan ini tidak dapat dibatalkan.',
+                yesText: 'Ya, Hapus Semua',
+                yesClass: 'bg-red-700 hover:bg-red-800',
+                onConfirm: deleteAllSiswa
+            });
+        }
+
+        function deleteAllSiswa() {
+            websiteContent.pesertaDidik = [];
+            renderSiswaManagementTable();
+            renderAnggotaSiswaTable();
+            showNotification('Semua data peserta didik berhasil dihapus.', 'success');
+        }
+
+        function exportSiswaToCSV() {
+            let csvContent = "data:text/csv;charset=utf-8,No,Nama Peserta Didik,Kelas\n";
+            websiteContent.pesertaDidik.sort((a, b) => a.kelas - b.kelas || a.nama.localeCompare(b.nama)).forEach((siswa, index) => {
+                const row = `${index + 1},"${siswa.nama}",${siswa.kelas}`;
+                csvContent += row + "\n";
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "data-peserta-didik.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showNotification("Data berhasil diekspor!", 'success');
+        }
+
+        function handleImportSiswa(event) {
+            const file = event.target.files[0];
+            if (!file) {
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const text = e.target.result;
+                const rows = text.split('\n').filter(row => row.trim() !== '');
+
+                if (rows.length <= 1) {
+                    showNotification('File CSV kosong atau hanya berisi header.', 'error');
+                    return;
+                }
+
+                const newSiswaList = [];
+                for (let i = 1; i < rows.length; i++) {
+                    const cols = rows[i].split(',');
+                    if (cols.length >= 3) {
+                        const nama = cols[1].replace(/"/g, '').trim();
+                        const kelas = parseInt(cols[2].trim());
+
+                        if (nama && !isNaN(kelas)) {
+                            newSiswaList.push({
+                                id: Date.now() + i,
+                                nama: nama,
+                                kelas: kelas
+                            });
+                        }
+                    }
+                }
+
+                if (newSiswaList.length > 0) {
+                    openConfirmationModal({
+                        title: 'Konfirmasi Impor Data',
+                        message: `Anda akan mengimpor <b>${newSiswaList.length}</b> data siswa baru. Ini akan <b>MENGHAPUS SEMUA</b> data siswa yang ada saat ini. Lanjutkan?`,
+                        yesText: 'Ya, Ganti Data',
+                        yesClass: 'bg-yellow-500 hover:bg-yellow-600',
+                        onConfirm: () => {
+                            websiteContent.pesertaDidik = newSiswaList;
+                            renderSiswaManagementTable();
+                            renderAnggotaSiswaTable();
+                            showNotification(`${newSiswaList.length} data siswa berhasil diimpor.`, 'success');
+                        }
+                    });
+
+                } else {
+                    showNotification('Tidak ada data valid yang ditemukan dalam file CSV.', 'error');
+                }
+            };
+
+            reader.onerror = function() {
+                showNotification('Gagal membaca file.', 'error');
+            };
+
+            reader.readAsText(file);
+            event.target.value = '';
+        }
+
+        function handleImportUser(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const text = e.target.result;
+                const rows = text.split('\n').filter(row => row.trim() !== '');
+
+                if (rows.length <= 1) {
+                    showNotification('File CSV kosong atau hanya berisi header.', 'error');
+                    return;
+                }
+
+                let addedCount = 0;
+                let skippedCount = 0;
+
+                for (let i = 1; i < rows.length; i++) {
+                    const cols = rows[i].split(',').map(c => c.replace(/"/g, '').trim());
+                    if (cols.length >= 7) {
+                        const [name, username, password, role, jabatan, foto_url, rombelStr] = cols;
+                        if (name && username && password && role) {
+                            if (websiteContent.users.some(u => u.username === username)) {
+                                skippedCount++;
+                            } else {
+                                const rombel = parseInt(rombelStr);
+                                websiteContent.users.push({
+                                    name,
+                                    username,
+                                    password,
+                                    role,
+                                    jabatan: jabatan || '',
+                                    foto_url: foto_url || '',
+                                    rombel: !isNaN(rombel) ? rombel : null
+                                });
+                                addedCount++;
+                            }
+                        }
+                    }
+                }
+
+                if (addedCount > 0) {
+                    renderUserManagementTable();
+                    renderStrukturOrganisasi();
+                    renderStrukturAdminPreview();
+                    let message = `${addedCount} pengguna baru berhasil diimpor.`;
+                    if (skippedCount > 0) {
+                        message += ` ${skippedCount} pengguna dilewati karena username sudah ada.`;
+                    }
+                    showNotification(message, 'success');
+                } else {
+                    showNotification('Tidak ada pengguna baru yang ditambahkan. Mungkin semua username sudah ada.', 'error');
+                }
+            };
+
+            reader.onerror = function() {
+                showNotification('Gagal membaca file.', 'error');
+            };
+
+            reader.readAsText(file);
+            event.target.value = '';
+        }
+
+        function exportUsersToCSV() {
+            let csvContent = "data:text/csv;charset=utf-8,Nama,Username,Password,Role,Jabatan,Foto URL,Rombel\n";
+            websiteContent.users.forEach(user => {
+                const rowData = [
+                    `"${user.name}"`,
+                    `"${user.username}"`,
+                    `"${user.password}"`,
+                    `"${user.role}"`,
+                    `"${user.jabatan || ''}"`,
+                    `"${user.foto_url || ''}"`,
+                    user.rombel || ''
+                ].join(',');
+                csvContent += rowData + "\n";
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "data-pengguna.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showNotification("Data pengguna berhasil diekspor!", 'success');
+        }
+
+        // Renamed and improved from showSuccessMessage
+        function showNotification(message, type = 'success', duration = 3000) {
+            const container = document.getElementById('notification-container');
+            const notif = document.createElement('div');
+            let bgColor, icon;
+
+            switch (type) {
+                case 'success':
+                    bgColor = 'bg-green-500';
+                    icon = 'fa-check-circle';
+                    break;
+                case 'error':
+                    bgColor = 'bg-red-500';
+                    icon = 'fa-exclamation-triangle';
+                    break;
+                case 'info':
+                    bgColor = 'bg-blue-500';
+                    icon = 'fa-info-circle';
+                    break;
+                default:
+                    bgColor = 'bg-gray-700';
+                    icon = 'fa-bell';
+            }
+
+            notif.className = `notification ${bgColor} text-white font-bold py-2 px-4 rounded-lg shadow-lg flex items-center gap-3`;
+            notif.innerHTML = `<i class="fas ${icon}"></i><span>${message}</span>`;
+            container.appendChild(notif);
+
+            setTimeout(() => {
+                notif.style.animation = 'slideOut 0.5s forwards';
+                setTimeout(() => notif.remove(), 500);
+            }, duration);
+        }
+
+
+        function handlePostSubmit(e) {
+            e.preventDefault();
+            const postIdInput = document.getElementById('post-id');
+            const newPostData = {
+                title: document.getElementById('post-title').value,
+                content: document.getElementById('post-content').value,
+                fullContent: document.getElementById('post-full-content').value,
+                image: document.getElementById('post-image').value,
+                author: currentUser.username
+            };
+            if (postIdInput.value) {
+                const index = posts.findIndex(p => p.id == postIdInput.value);
+                posts[index] = { id: parseInt(postIdInput.value), ...newPostData };
+            } else {
+                newPostData.id = Date.now();
+                posts.unshift(newPostData);
+            }
+            renderPosts();
+            resetPostForm();
+            showNotification('Berita berhasil disimpan', 'success');
+        }
+
+        function resetPostForm() {
+            document.getElementById('post-form').reset();
+            document.getElementById('post-id').value = '';
+            document.getElementById('form-title').textContent = "Tambah/Edit Berita";
+            document.getElementById('cancel-edit-btn').classList.add('hidden');
+        }
+
+        function editPost(id) {
+            showAdminTab('berita');
+            const post = posts.find(p => p.id === id);
+            document.getElementById('post-id').value = post.id;
+            document.getElementById('post-title').value = post.title;
+            document.getElementById('post-content').value = post.content;
+            document.getElementById('post-full-content').value = post.fullContent;
+            document.getElementById('post-image').value = post.image;
+            document.getElementById('form-title').textContent = `Edit Berita: ${post.title}`;
+            document.getElementById('cancel-edit-btn').classList.remove('hidden');
+            document.getElementById('admin-panel').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function confirmDelete(id, type) {
+            let item;
+            let onConfirm;
+            let title = 'Konfirmasi Hapus';
+            let message = '';
+
+            switch(type) {
+                case 'berita':
+                    item = posts.find(p => p.id === id);
+                    message = `Yakin ingin menghapus berita "${item.title}"?`;
+                    onConfirm = () => {
+                        posts = posts.filter(p => p.id !== id);
+                        renderPosts();
+                        showNotification('Berita telah dihapus', 'success');
+                    };
+                    break;
+                case 'fasilitas':
+                    item = websiteContent.fasilitas.find(f => f.id === id);
+                    message = `Yakin ingin menghapus fasilitas "${item.name}"?`;
+                    onConfirm = () => {
+                        websiteContent.fasilitas = websiteContent.fasilitas.filter(f => f.id !== id);
+                        renderFasilitas();
+                        renderFasilitasAdminTable();
+                        showNotification('Fasilitas telah dihapus', 'success');
+                    };
+                    break;
+                case 'prestasi':
+                    item = websiteContent.prestasi.find(p => p.id === id);
+                    message = `Yakin ingin menghapus prestasi "${item.title}"?`;
+                    onConfirm = () => {
+                        websiteContent.prestasi = websiteContent.prestasi.filter(p => p.id !== id);
+                        renderPrestasi();
+                        renderPrestasiAdminTable();
+                        showNotification('Prestasi telah dihapus', 'success');
+                    };
+                    break;
+                case 'galeri':
+                    item = websiteContent.galeri.find(g => g.id === id);
+                    message = `Yakin ingin menghapus gambar "${item.alt}"?`;
+                    onConfirm = () => {
+                        websiteContent.galeri = websiteContent.galeri.filter(g => g.id !== id);
+                        renderGaleri();
+                        renderGaleriAdminTable();
+                        showNotification('Gambar telah dihapus', 'success');
+                    };
+                    break;
+            }
+
+            openConfirmationModal({
+                title: title,
+                message: message,
+                yesText: 'Ya, Hapus',
+                yesClass: 'bg-red-600 hover:bg-red-700',
+                onConfirm: onConfirm
+            });
+        }
+
+        function openConfirmationModal({ title, message, yesText, yesClass, onConfirm }) {
+            const modal = document.getElementById('confirm-modal');
+            document.getElementById('confirm-title').textContent = title;
+            document.getElementById('confirm-message').innerHTML = message;
+
+            const confirmYesBtn = document.getElementById('confirm-yes-btn');
+            const newYesBtn = confirmYesBtn.cloneNode(true);
+            confirmYesBtn.parentNode.replaceChild(newYesBtn, confirmYesBtn);
+
+            newYesBtn.textContent = yesText;
+            newYesBtn.className = `px-6 py-2 rounded-lg text-white ${yesClass}`;
+            newYesBtn.onclick = () => {
+                onConfirm();
+                closeModalById('confirm-modal');
+            };
+            openModalById('confirm-modal');
+        }
+
+        function initHeroSlider() {
+            const slides = [
+                'https://lh3.googleusercontent.com/gps-cs-s/AC9h4npBQowcv421Qsg3tov0rLE8Mlg7yzhC4wBbFdb26UotTzL52SXmanXCJnI0A8vOxuda15oIkLXT-o6zMCO-iqn3zRo6caoEFN4nQIvY4QDTKYrBRGhaDOxtnbZYLH_jIuS8DBiG=s680-w680-h510-rw',
+                'https://lh3.googleusercontent.com/gps-cs-s/AC9h4npxrmZnf20hJHc2lgGETLbRXgqGAMOfvOZ2OlVWKmQPB9R9nID2ah5rou5udKa0KRh8lGzpkoyO5GYwQLlufSineE7SmJeRikhnQl_0wOm19IkdZ5XZwYwq5g-qYjMe5ntz4cB1=s680-w680-h510-rw',
+                'https://lh3.googleusercontent.com/gps-cs-s/AC9h4nq2IGAQuzvmeAIQaivsNiZTGlMf9Cr1MPbixzjDt-ND30Fi3gFqohUABejdmXnNK4f2rwDUcGQvQJPuxvFxoKABxaC8Tqh9EZQKVw1i6Cs3logK5WQQQ_dhk8sp59WF905t8nvtGuGviC5r=s680-w680-h510-rw',
+                'https://lh3.googleusercontent.com/gps-cs-s/AC9h4nob67fHmPx_f7igiPARwVE_e-irTfQNZtB0xI-SI4YP7B6P3bOh_l6L2HGqVdpUHIAipuI86-y2bWB3IwwdFincLWD72X6bESHO0r6UvBQ_rGRY8VhUtV9OKsyyqVQD2U1BFX6YJir2h-FH=s680-w680-h510-rw'
+            ];
+            const sliderContainer = document.getElementById('slider-container');
+            const dotsContainer = document.getElementById('slider-dots');
+            if (!sliderContainer || !dotsContainer) return;
+            sliderContainer.innerHTML = '';
+            dotsContainer.innerHTML = '';
+            slides.forEach((src, index) => {
+                const slide = document.createElement('div');
+                slide.className = 'slide absolute inset-0 w-full h-full bg-cover bg-center transition-opacity duration-1000 ease-in-out opacity-0';
+                slide.style.backgroundImage = `url('${src}')`;
+                sliderContainer.appendChild(slide);
+                const dot = document.createElement('button');
+                dot.className = 'dot w-3 h-3 bg-white/50 rounded-full hover:bg-white transition';
+                dot.setAttribute('aria-label', `Go to slide ${index + 1}`);
+                dot.addEventListener('click', () => {
+                    showSlide(index);
+                    clearInterval(slideInterval);
+                    slideInterval = setInterval(nextSlide, 5000);
+                });
+                dotsContainer.appendChild(dot);
+            });
+            const slideElements = sliderContainer.querySelectorAll('.slide');
+            const dotElements = dotsContainer.querySelectorAll('.dot');
+            let currentSlide = 0;
+            let slideInterval;
+
+            function showSlide(n) {
+                currentSlide = n;
+                slideElements.forEach((slide, index) => {
+                    slide.style.opacity = index === n ? '1' : '0';
+                });
+                dotElements.forEach((dot, index) => {
+                    dot.classList.toggle('bg-white', index === n);
+                    dot.classList.toggle('bg-white/50', index !== n);
+                });
+            }
+
+            function nextSlide() {
+                currentSlide = (currentSlide + 1) % slides.length;
+                showSlide(currentSlide);
+            }
+            if (slideElements.length > 0) {
+                showSlide(0);
+                slideInterval = setInterval(nextSlide, 5000);
+            }
+        }
+
+        function openModalById(modalId) {
+            const modal = document.getElementById(modalId);
+            const content = modal.querySelector('.modal-content');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            if (content) content.classList.remove('scale-95');
+        }
+
+        function closeModalById(modalId) {
+            const modal = document.getElementById(modalId);
+            const content = modal.querySelector('.modal-content');
+            if (content) content.classList.add('scale-95');
+            modal.classList.add('opacity-0');
+            setTimeout(() => modal.classList.add('pointer-events-none'), 300);
+        }
+
+        function setupModal(modalId, contentId, openBtnId, mobileOpenBtnId, closeBtnId) {
+            if (openBtnId) document.getElementById(openBtnId).addEventListener('click', () => openModalById(modalId));
+            if (mobileOpenBtnId) document.getElementById(mobileOpenBtnId).addEventListener('click', () => openModalById(modalId));
+            if (closeBtnId) document.getElementById(closeBtnId).addEventListener('click', () => closeModalById(modalId));
+            document.getElementById(modalId).addEventListener('click', e => {
+                if (e.target.id === modalId) closeModalById(modalId);
+            });
+        }
+
+        function showNewsModal(postId) {
+            const ngModal = document.getElementById('news-gallery-modal');
+            const ngModalContent = document.getElementById('news-gallery-modal-content');
+            const post = posts.find(p => p.id == postId);
+            if (!post) return;
+            ngModalContent.innerHTML = `<div class="p-6"><img src="${post.image}" alt="${post.title}" class="w-full h-64 object-cover rounded-lg mb-4" onerror="this.onerror=null;this.src='https://placehold.co/600x400/cccccc/ffffff?text=Image+Error';"><h3 class="text-2xl font-bold mb-4">${post.title}</h3><div class="prose max-w-none leading-relaxed text-gray-700">${post.fullContent.replace(/\n/g, '<br>')}</div><button class="mt-6 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 close-btn">Tutup</button></div>`;
+            ngModalContent.querySelector('.close-btn').addEventListener('click', () => closeModalById('news-gallery-modal'));
+            openModalById('news-gallery-modal');
+        }
+
+        function showImageModal(src) {
+            const ngModalContent = document.getElementById('news-gallery-modal-content');
+            ngModalContent.innerHTML = `<div class="relative p-2"><img src="${src}" class="max-w-full max-h-[85vh] rounded-lg mx-auto"><button class="absolute -top-1 -right-1 bg-white/80 rounded-full h-10 w-10 flex items-center justify-center font-bold text-2xl text-gray-800 hover:bg-white close-btn">×</button></div>`;
+            ngModalContent.querySelector('.close-btn').addEventListener('click', () => closeModalById('news-gallery-modal'));
+            openModalById('news-gallery-modal');
+        }
+        setupModal('news-gallery-modal', 'news-gallery-modal-content', null, null, null);
+        setupModal('confirm-modal', 'confirm-modal-content', null, null, 'confirm-no-btn');
+
+        function toggleMainContent(shouldShow) {
+            const mainSections = ['beranda', 'profil', 'spmb', 'berita', 'fasilitas', 'guru', 'prestasi', 'galeri', 'kontak'];
+            mainSections.forEach(id => {
+                const section = document.getElementById(id);
+                if (section) {
+                    section.style.display = shouldShow ? 'block' : 'none';
+                }
+            });
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const username = e.target.username.value;
+            const password = e.target.password.value;
+            const role = e.target.role.value;
+            const messageEl = document.getElementById('login-message');
+            messageEl.textContent = '';
+
+            const foundUser = websiteContent.users.find(user => user.username === username && user.password === password && user.role === role);
+
+            if (foundUser) {
+                handleLoginSuccess(foundUser.username, foundUser.role === 'admin');
+            } else {
+                messageEl.textContent = 'Username atau password salah atau role tidak sesuai!';
+                messageEl.className = 'text-red-600';
+            }
+        }
+
+        function handleForgotPasswordRequest(e) {
+            e.preventDefault();
+            const username = document.getElementById('forgot-username').value;
+            const messageEl = document.getElementById('forgot-message');
+            const isAnggotaUser = websiteContent.users.some(u => u.username === username && u.role === 'anggota');
+
+            if (isAnggotaUser) {
+                if (!websiteContent.passwordResets.includes(username)) {
+                    websiteContent.passwordResets.push(username);
+                }
+                messageEl.textContent = 'Permintaan reset telah dikirim ke admin.';
+                messageEl.className = 'text-green-600';
+                updateAdminNotificationBadge();
+                renderPasswordResets();
+                setTimeout(() => {
+                    closeModalById('forgot-password-modal');
+                    messageEl.textContent = '';
+                }, 2000);
+            } else {
+                messageEl.textContent = 'Username anggota tidak ditemukan.';
+                messageEl.className = 'text-red-600';
+            }
+        }
+
+        function resetAnggotaPasswordAdmin(usernameToReset) {
+            const newPasswordInput = document.getElementById(`new-password-for-${usernameToReset}`);
+            const newPassword = newPasswordInput ? newPasswordInput.value : '';
+
+            if (!newPassword) {
+                showNotification('Silakan masukkan password baru untuk reset.', 'error');
+                return;
+            }
+            const userToReset = websiteContent.users.find(u => u.username === usernameToReset);
+
+            if (userToReset) {
+                userToReset.password = newPassword;
+                websiteContent.passwordResets = websiteContent.passwordResets.filter(u => u !== usernameToReset);
+                renderPasswordResets();
+                renderUserManagementTable();
+                updateAdminNotificationBadge();
+                showNotification(`Password untuk ${usernameToReset} berhasil direset.`, 'success');
+            } else {
+                showNotification('Gagal mereset password. Pengguna tidak ditemukan.', 'error');
+            }
+        }
+
+        function handleLoginSuccess(username, isAdmin) {
+            currentUser.username = username;
+            currentUser.isAdmin = isAdmin;
+
+            showNotification("Login berhasil!", "success"); // Notifikasi login berhasil
+
+            updateUserStatus();
+
+            toggleMainContent(false);
+
+            if (isAdmin) {
+                document.getElementById('admin-panel').style.display = 'block';
+                document.getElementById('admin-nav-link').classList.remove('hidden');
+                document.getElementById('mobile-admin-nav-link').classList.remove('hidden');
+                showAdminTab('siswa');
+                document.getElementById('admin-panel').scrollIntoView({ behavior: 'smooth' });
+            } else {
+                document.getElementById('anggota-panel').style.display = 'block';
+                document.getElementById('anggota-nav-link').classList.remove('hidden');
+                document.getElementById('mobile-anggota-nav-link').classList.remove('hidden');
+                showAnggotaTab('siswa');
+                renderAnggotaSiswaTable();
+                renderAnggotaPostsTable();
+                document.getElementById('anggota-panel').scrollIntoView({ behavior: 'smooth' });
+            }
+            setTimeout(() => {
+                closeModalById('login-modal');
+                // messageEl.textContent = ''; // Hapus baris ini karena notifikasi sudah ditangani oleh showNotification
+            }, 1500);
+        }
+
+        function updateUserStatus() {
+            const roleText = currentUser.isAdmin ? '(Admin)' : '(Anggota)';
+            const statusHTML = `<div class="flex items-center space-x-3"><span class="text-gray-700">Halo, ${currentUser.username} ${roleText}</span><button onclick="logout()" class="bg-red-500 text-white text-sm px-3 py-1 rounded-full hover:bg-red-600">Logout</button></div>`;
+            document.getElementById('user-status').innerHTML = statusHTML;
+            document.getElementById('mobile-user-status').innerHTML = `<div class="text-center">${statusHTML}</div>`;
+        }
+
+        function logout() {
+            currentUser.username = null;
+            currentUser.isAdmin = false;
+
+            showNotification("Anda telah logout.", "info"); // Notifikasi logout
+
+            const loginBtnHTML = `<button id="login-button" class="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 shadow-md flex items-center space-x-2"><i class="fas fa-sign-in-alt"></i><span>Login</span></button>`;
+            document.getElementById('user-status').innerHTML = loginBtnHTML;
+            document.getElementById('login-button').addEventListener('click', () => openModalById('login-modal'));
+
+            const mobileLoginBtnHTML = `<button id="mobile-login-button" class="w-full bg-blue-600 text-white px-4 py-2 rounded-full shadow-md">Login</button>`;
+            document.getElementById('mobile-user-status').innerHTML = mobileLoginBtnHTML;
+            document.getElementById('mobile-login-button').addEventListener('click', () => openModalById('login-modal'));
+
+            ['admin-panel', 'anggota-panel'].forEach(id => document.getElementById(id).style.display = 'none');
+            ['admin-nav-link', 'anggota-nav-link', 'mobile-admin-nav-link', 'mobile-anggota-nav-link'].forEach(id => document.getElementById(id).classList.add('hidden'));
+
+            toggleMainContent(true);
+            document.getElementById('header').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        let spmbFormSubmitted = false;
+        function handleIframeLoad() {
+            if (!spmbFormSubmitted) return;
+            const spmbMessage = document.getElementById('spmb-message');
+            const spmbForm = document.getElementById('spmb-form');
+            const formData = new FormData(spmbForm);
+            spmbMessage.innerHTML = `<div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded" role="alert"><p class="font-bold">Pendaftaran Berhasil!</p><p>Terima kasih, <b>${formData.get('nama')}</b>. Data pendaftaran Anda telah kami terima.</p></div>`;
+            spmbForm.reset();
+            const spmbSubmitButton = document.getElementById('spmb-submit-button');
+            spmbSubmitButton.querySelector('.btn-text').textContent = 'Kirim Data Pendaftaran';
+            spmbSubmitButton.querySelector('.fa-spinner').classList.add('hidden');
+            spmbSubmitButton.disabled = false;
+            setTimeout(() => {
+                spmbMessage.innerHTML = '';
+            }, 6000);
+            spmbFormSubmitted = false;
+        }
+
+        // --- Anggota Panel Functions ---
+        function renderAnggotaPostsTable() {
+            const container = document.getElementById('anggota-posts-table-container');
+            if (!container || !currentUser.username) {
+                return;
+            }
+
+            const myPosts = posts.filter(p => p.author === currentUser.username);
+
+            let tableHTML = `<table class="w-full text-left">
+                <thead><tr class="bg-gray-100"><th class="p-3">Judul</th><th class="p-3">Aksi</th></tr></thead><tbody>`;
+
+            if (myPosts.length > 0) {
+                myPosts.forEach(post => {
+                    tableHTML += `<tr class="border-b">
+                        <td class="p-3">${post.title}</td>
+                        <td class="p-3 whitespace-nowrap">
+                            <button onclick="editAnggotaPost(${post.id})" class="text-blue-600 hover:text-blue-800 mr-4" title="Edit"><i class="fas fa-edit"></i></button>
+                            <button onclick="confirmDeleteAnggotaPost(${post.id})" class="text-red-600 hover:text-red-800" title="Hapus"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>`;
+                });
+            } else {
+                tableHTML += `<tr><td colspan="2" class="p-3 text-center italic">Anda belum membuat berita.</td></tr>`;
+            }
+
+            tableHTML += `</tbody></table>`;
+            container.innerHTML = tableHTML;
+        }
+
+        function handleAnggotaPostSubmit(e) {
+            e.preventDefault();
+            const id = document.getElementById('anggota-post-id').value;
+            const data = {
+                title: document.getElementById('anggota-post-title').value,
+                content: document.getElementById('anggota-post-content').value,
+                fullContent: document.getElementById('anggota-post-full-content').value,
+                image: document.getElementById('anggota-post-image').value,
+                author: currentUser.username
+            };
+
+            const logMessage = id ? `memperbarui berita: "${data.title}"` : `menambahkan berita baru: "${data.title}"`;
+            logActivity(currentUser.username, logMessage);
+
+            if (id) {
+                const index = posts.findIndex(p => p.id == id);
+                posts[index] = { id: parseInt(id), ...data };
+            } else {
+                data.id = Date.now();
+                posts.unshift(data);
+            }
+            renderPosts();
+            resetAnggotaPostForm();
+            showNotification('Berita berhasil disimpan.', 'success');
+        }
+
+        function editAnggotaPost(id) {
+            const post = posts.find(p => p.id === id);
+            if(post.author !== currentUser.username) return;
+
+            document.getElementById('anggota-post-id').value = post.id;
+            document.getElementById('anggota-post-title').value = post.title;
+            document.getElementById('anggota-post-content').value = post.content;
+            document.getElementById('anggota-post-full-content').value = post.fullContent;
+            document.getElementById('anggota-post-image').value = post.image;
+            document.getElementById('anggota-form-title').textContent = `Edit Berita`;
+            document.getElementById('anggota-cancel-edit-btn').classList.remove('hidden');
+        }
+
+        function resetAnggotaPostForm() {
+            document.getElementById('anggota-post-form').reset();
+            document.getElementById('anggota-post-id').value = '';
+            document.getElementById('anggota-form-title').textContent = "Tambah/Edit Berita";
+            document.getElementById('anggota-cancel-edit-btn').classList.add('hidden');
+        }
+
+        function confirmDeleteAnggotaPost(id) {
+            const post = posts.find(p => p.id === id);
+              if(post.author !== currentUser.username) return;
+
+            openConfirmationModal({
+                title: 'Hapus Berita',
+                message: `Yakin ingin menghapus berita "${post.title}"?`,
+                onConfirm: () => {
+                    logActivity(currentUser.username, `menghapus berita: "${post.title}"`);
+                    posts = posts.filter(p => p.id !== id);
+                    renderPosts();
+                    showNotification('Berita telah dihapus', 'success');
+                }
+            });
+        }
+
+        // --- Activity Log Functions ---
+        function renderActivityLog() {
+            const container = document.getElementById('activity-log-container');
+            if(!container) return;
+
+            if (websiteContent.activityLog.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 italic text-center">Tidak ada aktivitas terbaru.</p>';
+                return;
+            }
+
+            container.innerHTML = websiteContent.activityLog.map(log => {
+                const isUnread = !log.read;
+                const time = new Date(log.timestamp).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short'});
+                return `
+                    <div onclick="markActivityAsRead(${log.id})" class="p-3 rounded-lg cursor-pointer transition-colors ${isUnread ? 'bg-blue-50 hover:bg-blue-100' : 'bg-gray-50 hover:bg-gray-100'} border-l-4 ${isUnread ? 'border-blue-500' : 'border-gray-300'}">
+                        <div class="flex justify-between items-center text-sm">
+                            <p class="text-gray-800"><b class="font-semibold">${log.username}</b> ${log.action}</p>
+                            <p class="text-gray-500 flex-shrink-0 ml-4">${time}</p>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function markActivityAsRead(logId) {
+            const logItem = websiteContent.activityLog.find(log => log.id === logId);
+            if (logItem && !logItem.read) {
+                logItem.read = true;
+                renderActivityLog();
+                updateAdminNotificationBadge();
+            }
+        }
+
+        function markAllActivitiesAsRead() {
+              websiteContent.activityLog.forEach(log => log.read = true);
+              renderActivityLog();
+              updateAdminNotificationBadge();
+              showNotification('Semua aktivitas ditandai telah dibaca.', 'success');
+        }
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+            renderAllContent();
+            initializeEventListeners();
+        });
+    </script>
+</body>
+</html>
